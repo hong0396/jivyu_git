@@ -1,0 +1,33 @@
+strictness: medium
+
+output-format: grouped
+
+test-warnings: true
+doc-warnings: false
+
+ignore-paths:
+    - ez_setup.py
+    - impala/tests/_dbapi20_tests.py
+    - bin/register-impala-udfs.py
+
+ignore-patterns:
+    - ^build
+    - ^impala/_thrift_gen
+    - ^dev
+    - ^examples
+    - udf
+
+pylint:
+    disable:
+        - redefined-builtin
+        - too-many-arguments
+
+pep8:
+    options:
+        max-line-length: 79
+
+pyroma:
+    run: true
+
+mccabe:
+    run: false

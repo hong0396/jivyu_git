@@ -1,0 +1,4 @@
+[run]
+branch: True
+omit: impala/tests*,
+      impala/_thrift_gen/*
