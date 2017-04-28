@@ -39,7 +39,6 @@ def build_dfs(train, test, le):
             'id': recipe['id'],
             'ingredients': [clean_string(x) for x in recipe['ingredients']]
         }
-
     clean_train = list(map(clean_train_recipe, train))
     clean_test = list(map(clean_test_recipe, test))
 
@@ -94,9 +93,9 @@ def select_classifier(classifiers, train_df, train_target):
     return max(scores, key=lambda x: x[1])[0]
 
 def main():
-    with open('../input/train.json') as inf:
+    with open('train.json') as inf:
         train = json.load(inf)
-    with open('../input/test.json') as inf:
+    with open('test.json') as inf:
         test = json.load(inf)
 
     cuisines = list(set(e['cuisine'] for e in train))

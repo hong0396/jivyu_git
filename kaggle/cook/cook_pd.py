@@ -7,7 +7,7 @@ import numpy as np
 import pdb
 from sklearn.neural_network import MLPClassifier
 
-with open('../input/train.json') as json_data:
+with open('train.json') as json_data:
     data = js.load(json_data)
     json_data.close()
 
