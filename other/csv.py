@@ -8,3 +8,8 @@ with open("test.csv","w") as csvfile:
     writer.writerow(["index","a_name","b_name"])
     #写入多行用writerows
     writer.writerows([[0,1,3],[1,2,3],[2,3,4]])
+
+
+with open("test.csv","r",encoding='utf-8') as csvfile:
+    reader = csv.DictReader(csvfile)
+   # for row in reader:
