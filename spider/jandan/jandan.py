@@ -6,6 +6,7 @@ from  bs4 import BeautifulSoup
 from urllib.request import urlretrieve
 import imageio
 import shutil
+import time
 from multiprocessing import Pool
 #from images2gif import writeGif
 import  os
@@ -15,14 +16,30 @@ headers = {  'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.3
                  ' Chrome/32.0.1700.76 Safari/537.36'
 }
 #writeGif(filename, images, duration=0.5, subRectangles=False)
+requests.adapters.DEFAULT_RETRIES = 5
+# s = requests.session()
+# s.keep_alive = False
 def janmei(url):
-    res=requests.get(url, headers=headers)
-    soup = BeautifulSoup(res.content, 'lxml')
+    #res=requests.get(url, headers=headers)
+    page = ''
+    while page == '':
+        try:
+            page = requests.get(url, headers=headers)
+        except:
+            print("Connection refused by the server..")
+            print("Let me sleep for 5 seconds")
+            print("ZZzzzz...")
+            time.sleep(5)
+            print("Was a nice sleep, now let me continue...")
+            continue
+    soup = BeautifulSoup(page.content, 'lxml')
     lis=soup.find_all('img')
     for i in lis:
         img=str(i['src'])
         gif = i.get('org_src')
-        html = requests.get('http:' + img, headers=headers)
+        # print(img)
+        # print(gif)
+        time.sleep(3)
         name = img.split(r'/')[-1]
         if not os.path.exists("E:\\picture\\"+name) :
             if gif:
@@ -31,12 +48,14 @@ def janmei(url):
                     f.write(requests.get('http:' + gif, headers=headers).content)
                     f.close()
                 print('---------写入完成gif--------------')
-            else:
+            elif img:
                 print('---------正在写入jpg--------------')
                 with open("E:\\picture\\"+name, 'ab') as file:
-                    file.write(html.content)
+                    file.write(requests.get('http:' + img, headers=headers).content)
                     file.close()
                 print('---------写入完成jpg--------------')
+            else:
+                pass
 
 
 
@@ -67,7 +86,15 @@ def janmei(url):
         #         file.write(html.content)
         #         file.close()
 
-
+# URL = 'http://ip.taobao.com/service/getIpInfo.php'
+# try:
+#     r = requests.get(URL, params={'ip': '8.8.8.8'}, timeout=3)
+#     r.raise_for_status()    # 如果响应状态码不是 200，就主动抛出异常
+# except requests.RequestException as e:
+#     print(e)
+# else:
+#     result = r.json()
+#     print(type(result), result, sep='\n')
 
 
 def page():
