@@ -1,0 +1,332 @@
+:root {
+    --text-color: #CCC;
+    --text-color-light: rgba(255, 255, 255, 0.9);
+    --text-color-deep: #999;
+    --strike-color: #369;
+    --formal-color: #666;
+    --background-color: #000;
+    --background-transparent-color: rgba(255,255,255,0.1);
+    font-size: 12px;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+body {
+    font-family: "Noto Sans CJK SC DemiLight", "Noto Sans CJK SC", "Source Han Sans CN", "Microsoft YaHei", "Helvetica Neue", Helvetica, "Nimbus Sans L", Arial, "Liberation Sans", "Hiragino Sans GB", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti", SimHei, "WenQuanYi Zen Hei Sharp", sans-serif;
+    font-size: 1.5rem;
+    line-height: 1.75em;
+    letter-spacing: 0.01em;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-rendering: geometricPrecision;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    line-height: 1.15em;
+    color: var(--text-color-light);
+    margin-bottom: 0;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    h1, h2, h3, h4, h5, h6 {
+        background: linear-gradient(var(--text-color-light), var(--text-color), var(--text-color-deep));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+}
+
+h1 {
+    font-size: 2.2em;
+}
+
+h2 {
+    font-size: 2.0em;
+}
+
+h3 {
+    font-size: 1.8em;
+}
+
+h4 {
+    font-size: 1.6em;
+}
+
+h5 {
+    font-size: 1.4em;
+}
+
+h6 {
+    font-size: 1.2em;
+}
+
+h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover {
+    text-decoration: none;
+}
+
+p, ul, ol, dl {
+    margin: 0 0 1.75em 0;
+}
+
+pre + p {
+    margin-top: 1.75em;
+}
+
+strong {
+    color: var(--formal-color);
+}
+
+img {
+    max-width: 100%;
+}
+
+a, a:active {
+    cursor: pointer;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+blockquote {
+    margin: 1.75em -2.2em 1.75em -2.2em;
+    padding: 1.75em 0 1.75em 1.75em;
+    border-left: var(--text-color-deep) 0.4em solid;
+    font-style: italic;
+    background: var(--background-transparent-color);
+}
+
+blockquote * {
+    margin: 0
+}
+
+pre {
+    word-break: break-all;
+    background: var(--background-transparent-color);
+    padding: 2rem;
+    display: flex;
+}
+
+code {
+    display: inline-block;
+    background: var(--background-transparent-color);
+    padding: 0 0.5em;
+}
+
+pre code {
+    width: calc(100vw - 14px - 36px - 4rem);
+    background: transparent;
+    font-size: 1rem;
+    /* width: 100%; */
+    overflow-x: auto;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+main {
+    margin-top: 10rem;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: var(--background-transparent-color) 1px solid;
+    margin: 2em 0;
+}
+
+/* -------------------------------------------------------------------------- */
+
+.main-header {
+    margin-top: 10rem;
+    text-align: center;
+}
+
+.post {
+    word-break: break-word;
+    word-wrap: break-word;
+}
+
+.post-content h1,
+.post-content h2,
+.post-content h3,
+.post-content h4,
+.post-content h5,
+.post-content h6 {
+    margin: 0 0 0.4em 0;
+}
+
+h2.post-title {
+    margin: 0 0 0.4em 0;
+}
+
+.post-template .post-header {
+    margin-bottom: 3.4rem;
+}
+
+.post-date {
+    display: inline-block;
+    margin-left: 20px;
+    text-transform: uppercase;
+}
+
+.post-template .post-date {
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+
+.nav ul {
+    font-size: 1rem;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    list-style: none;
+    justify-content: space-between;
+}
+
+a.read-more,
+a.read-more:active,
+.pagination a,
+.pagination a:active {
+    color: var(--strike-color);
+}
+
+a:hover {
+    color: var(--text-color-light);
+    text-decoration: underline;
+}
+
+canvas#background {
+    pointer-events: none;
+    position: fixed;
+    height: 100vh;
+    width: 100%;
+    z-index: -999;
+    top: 0;
+    left: 0;
+}
+
+.site-wrapper {
+    max-width: 40em;
+    width: auto;
+}
+
+article.post,
+.pagination,
+.site-navbar,
+.site-footer {
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.site-navbar {
+    border-top: var(--background-transparent-color) 1px solid;
+    margin-top: 2rem;
+    padding-top: 2rem;
+}
+
+.no-cover .page-description,
+.post-meta,
+.post-meta a {
+    color: var(--text-color-deep);
+}
+
+.post-content {
+    margin-bottom: 3.4rem;
+}
+
+.post-content a {
+    color: var(--strike-color);
+    text-decoration: underline;
+}
+
+.site-footer {
+    font-size: 1rem;
+    display: flex;
+    justify-content: space-between;
+    margin: 2rem 0 5rem 0;
+}
+
+.pagination {
+    display: flex;
+    justify-content: space-between;
+}
+
+h2.page-description {
+    font-size: 2rem;
+}
+
+/* -------------------------------------------------------------------------- */
+
+#ds-reset .ds-avatar {
+    box-shadow: none !important;
+}
+
+#ds-thread #ds-reset li.ds-tab a {
+    text-shadow: none !important;
+    border: none !important;
+}
+
+#ds-thread #ds-reset a,
+#ds-thread #ds-reset .ds-login-buttons,
+#ds-reset .ds-like-panel,
+.ds-header.ds-gradient-bg {
+    color: var(--text-color) !important;
+}
+
+#ds-reset .ds-service-list a {
+    color: var(--strike-color) !important;
+}
+
+#ds-thread #ds-reset .ds-post-button {
+    background: transparent !important;
+    border-left: 1px solid #ccc !important;
+}
+
+#ds-thread #ds-reset .ds-post-toolbar {
+    box-shadow: none !important;
+}
+
+#ds-reset .ds-gradient-bg {
+    background: transparent !important;
+}
+
+#ds-thread #ds-reset .ds-replybox {
+    padding: 0 0 0 70px !important;
+}
+
+#ds-thread #ds-reset .ds-comment-body,
+#ds-thread #ds-reset ul.ds-children .ds-comment-body {
+    padding-left: 60px !important;
+}
+
+#ds-reset .ds-avatar img {
+    width: auto !important;
+    height: auto !important;
+    max-width: 50px !important;
+    max-height: 50px !important;
+}
+
+#ds-wrapper #ds-reset h2,
+#ds-thread #ds-reset .ds-comment-body p,
+#ds-thread #ds-reset .ds-textarea-wrapper textarea {
+    color: var(--text-color) !important;
+}
+
+#ds-reset .ds-highlight,
+#ds-thread #ds-reset .ds-user-name {
+    color: var(--strike-color) !important;
+}
+
+#ds-thread #ds-reset li.ds-post,
+#ds-thread #ds-reset .ds-comments,
+#ds-thread #ds-reset .ds-paginator,
+#ds-thread #ds-reset .ds-paginator div.ds-border {
+    border: none !important;
+}
+
+.ds-powered-by,
+#ds-thread #ds-reset .ds-post-options .ds-sync {
+    display: none !important;
+}

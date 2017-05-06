@@ -1,0 +1,78 @@
+python -m django --version
+
+
+
+在命令行中，使用 cd 命令进入你想存储代码所在的目录，然后运行以下命令：
+django-admin.py startproject mysite
+这将在当前目录创建一个 mysite 目录
+
+
+这些文件是：
+外层 mysite/ 目录只是你项目的一个容器。对于 Django 来说该目录名并不重
+要; 你可以重命名为你喜欢的。
+manage.py: 一个实用的命令行工具，可让你以各种方式与该 Django 项目进行
+交互。 你可以在 django-admin.py and manage.py 中查看关于 manage.py 所
+有的细节。
+内层 mysite/ 目录是你项目中的实际 Python 包。该目录名就是 Python 包名，
+通过它你可以导入它里面的任何东西。 (e.g. import mysite.settings).
+mysite/init.py: 一个空文件，告诉 Python 该目录是一个 Python 包。(如果你是
+Python 新手，请查看官方文档了解 关于包的更多内容 。)
+mysite/settings.py: 该 Django 项目的设置/配置。请查看 Django settings 将会
+告诉你如何设置。
+mysite/urls.py: 该 Django 项目的 URL 声明; 一份由 Django 驱动的网站“目
+录”。请查看 URL dispatcher 可以获取更多有关 URL 的信息。
+mysite/wsgi.py: 一个 WSGI 兼容的 Web 服务器的入口，以便运行你的项目。
+请查看 How to deploy with WSGI 获取更多细节
+
+
+DATABASES = {
+      'default': {
+          'ENGINE': 'django.db.backends.mysql', #数据库引擎
+          'NAME': 'test',                       #数据库名
+          'USER': 'root',                       #用户名
+          'PASSWORD': 'root',                   #密码
+          'HOST': '',                           #数据库主机，默认为localhost
+          'PORT': '',                           #数据库端口，MySQL默认为0
+          'OPTIONS': {
+             'autocommit': True,
+         },
+     }
+ }
+
+
+
+
+
+使用python和Django搭建自己的服务器的时候使用的是sqlite数据库,一切顺利.
+
+可是等到布置生产环境的时候要换成MySQL,根据Django官网的文档也设置好了setting.DATABASES.
+
+但是运行python manage.py makemigrations的时候又遇到错误了,查看日志大概的问题就是:
+
+ImportError: No module named 'MySQLdb',可是之前明明已经pip install pymysql了,大概是因为Django默认的还是使用MySQLdb吧. 尝试使用pymysql代替'MySQLdb'.
+
+在站点的__init__.py文件中添加
+
+import pymysql
+pymysql.install_as_MySQLdb()
+
+
+提交到服务器然后python manage.py makemigrations 然后python manage.py migrate成功.
+
+这样Django站点就成功使用MySQL作为数据库了.
+
+项目 ( Projects ) vs. 应用 ( apps )
+
+项目与应用之间有什么不同之处？应用是一个提供功能的 Web 应用 – 例如：
+一个博客系统、一个公共记录的数据库或者一个简单的投票系统。 项目是针对
+一个特定的 Web 网站相关的配置和其应用的组合。一个项目可以包含多个应
+用。一个应用可以在多个项目中使用。
+
+
+
+Django 提供了个实用工具可以自动生成
+一个应用的基本目录架构，
+python manage.py startapp polls
+
+
+
