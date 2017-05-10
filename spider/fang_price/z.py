@@ -41,7 +41,7 @@ def parse(url):
 
 def pd_mysql(pan, table):
     engine = create_engine('mysql+pymysql://root:guihong@localhost/datebase?charset=utf8')
-    pan.to_sql(table, engine, if_exists='replace')
+    pan.to_sql(table, engine, if_exists='append')
 
 url = "http://sh.lianjia.com/ershoufang/d{}s7"
 

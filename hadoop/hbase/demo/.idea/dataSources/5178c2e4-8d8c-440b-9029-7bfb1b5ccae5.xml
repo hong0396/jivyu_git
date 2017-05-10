@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="Hive Driver - jdbc:hive2://172.16.8.13:10000/default [2]">
+  <database-model serializer="dbm" rdbms="UNKNOWN" format-version="4.0">
+    <root id="1">
+      <DefaultCasing>mixed</DefaultCasing>
+    </root>
+    <database id="2" parent="1" name="Hive">
+      <Current>1</Current>
+      <Visible>1</Visible>
+    </database>
+    <schema id="3" parent="2" name="default"/>
+    <schema id="4" parent="2" name="sptcc_dm"/>
+    <schema id="5" parent="2" name="sptcc_dpa"/>
+    <schema id="6" parent="2" name="sptcc_soa"/>
+    <schema id="7" parent="2" name="sptcc_ssa"/>
+  </database-model>
+</dataSource>

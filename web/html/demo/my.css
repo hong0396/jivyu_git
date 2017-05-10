@@ -1,0 +1,24 @@
+
+#background{
+    height: 800px;
+    width: 100%;
+    position: absolute;
+    background-position: center center;
+    background-size: cover;
+    background-image: url("image/1.jpg");
+    
+}
+
+nav {
+    background-color: @brand-primary
+}
+
+a {
+    color: @link-color;
+    text-decoration: none;
+
+&:hover {
+     color: @link-hover-color;
+     text-decoration: underline;
+ }
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="Hive Driver - jdbc:hive2://172.16.8.13:10000/default" uuid="49ab4d2e-1485-4c27-9888-2535209ff4bc">
+      <synchronize>true</synchronize>
+      <configured-by-url>true</configured-by-url>
+      <jdbc-driver>com.cloudera.hive.jdbc4.HS2Driver</jdbc-driver>
+      <jdbc-url>jdbc:hive2://172.16.8.13:10000/default</jdbc-url>
+    </data-source>
+  </component>
+</project>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="Hive Driver - jdbc:hive2://172.16.8.13:10000/default" uuid="49ab4d2e-1485-4c27-9888-2535209ff4bc">
+      <database-info product="Apache Hive" version="1.1.0-cdh5.7.0" jdbc-version="4.0" driver-name="HiveJDBC" driver-version="02.05.18.1050">
+        <identifier-quote-string>`</identifier-quote-string>
+      </database-info>
+      <secret-storage>master_key</secret-storage>
+      <user-name>root</user-name>
+    </data-source>
+  </component>
+</project>

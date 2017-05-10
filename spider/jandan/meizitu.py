@@ -38,23 +38,27 @@ def meizi(url):
     lis=soup.find_all('div','con')
     for i in lis:
         r = requests.get(i.find('a').get('href'),headers=headers)
-        time.sleep(1)
+        time.sleep(2)
         s = BeautifulSoup(r.content, 'lxml')
         for j in s.find('div','postContent').find_all('p')[1].find_all('img'):
             img=str(j.get('src'))
             name = img[-18:].replace('/','_')
             folder = img[-18:-10].replace('/','_')
             html = requests.get(img, headers=headers)
-            time.sleep(1)
+            time.sleep(2)
             print(html)
             if not os.path.isdir("E:\\picture\\"+folder):
                 os.makedirs("E:\\picture\\"+folder)
+            else:
+                pass
             if not os.path.exists("E:\\picture\\"+folder+"\\"+name) :
                 print('---------正在写入jpg--------------')
                 with open("E:\\picture\\"+folder+"\\"+name, 'wb+') as file:
                     file.write(html.content)
                     file.close()
                 print('---------写入完成jpg--------------')
+            else:
+                pass
 
 
 
@@ -86,7 +90,7 @@ def meizi(url):
 #meizi(url)
 if  __name__ == '__main__':
     pool = Pool()
-    pool.map(meizi, [url.format(i) for i in range(1, 5)])
+    pool.map(meizi, [url.format(i) for i in range(1, 10)])
 #
 #for i in range(1, 5):
 #    urls = url.format(i)
