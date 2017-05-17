@@ -1,0 +1,224 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta charset="utf-8">
+        <style type="text/css">
+		body { font-family:Verdana; font-size:14px; margin:0;}
+		#container {margin:0 auto; width:100%;overflow: hidden;}
+		
+        </style>
+        <!-- start -->
+        <script src="../../js/jquery-1.8.2.min.js"></script> 
+        <script src="../../js/jquery.cxselect.js"></script>
+        <!-- end -->
+		<script src="../../extension/js/echarts.js"></script>
+				
+        <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+               
+	<!--  	<script src="extension/js/jquery.min.js"></script>-->
+        <script src="../../extension/js/example3.js" type='text/javascript' charset='utf-8'></script>		
+		<link href="../../extension/BMap/center.css"  rel="stylesheet" type="text/css"  />
+		
+		<link href="../../extension/BMap/qianxi.css"  rel="stylesheet" type="text/css"  />
+	<!--
+	<link rel="stylesheet" type="text/css" href="styles.css">
+	-->
+	
+  </head>
+<style type="text/css">
+
+
+ .menu { width:15%;position:fixed; z-index:35;filter: Alpha(Opacity=10, Style=0); }
+  .link {
+  height:8%;
+   width: 80%;
+	padding:12px;	
+	
+   position:fixed; 
+   z-index:5;
+   filter: Alpha(Opacity=10, Style=0);
+   margin-left: 91%;
+   margin-top: -77px; 
+  background: none;
+  background-color: rgba(0,0,0,0.5); 
+   
+   }
+   .list {
+  height:80%;
+   width: 25.6%;
+	padding:12px;	
+	
+   position:fixed; 
+   z-index:6;
+   filter: Alpha(Opacity=10, Style=0);
+   margin-left: 0.65%;
+   margin-top: 7.69%; 
+  background: none;
+  background-color: rgba(0,0,0,0.6); 
+   
+   }
+  
+ .r2{  z-index:40;width:10px; height:16px; }
+ .main{ width:100%; height:100%; z-index:10;  }
+#element_id {	
+  
+	width:250;
+	word-break:break-all;
+	vertical-align:middle;
+	
+	 padding-left:0px;
+	   
+}
+.serial-number {
+background-color: #00a900;
+}
+</style>
+<body>
+     <div id="container">   
+		   <div class="menu" id="menu">		       
+			  <form id="form1" action="" method="post">
+					<table cellspacing="0" class="mytable"> 
+						<tr> 
+							<td class="r1"><div style="width:60px;">进  站</div></td>
+							<td class="r2" style="width:70%;">
+							   <div  id="element_id" >						    						  
+	  							<select class="province"></select> 
+	  							<select class="city" id="city" name="city"></select> 			
+							  </div>
+							</td>	
+							<td rowspan=2>
+								<a id="query" class="btn" href="javascript:queryPage();"><strong>查询</strong></a>
+							</td>			 	   
+						</tr>							
+		   				<tr>
+		   					<td  class="r1" ><div style="width:60px;">出  站</div></td>
+							<td  class="r2" style="width:30%;">	
+									<select class='inputbox'  style="width:26.5%;" id="OUT_SITE_CODE" name="OUT_SITE_CODE">									
+										<option value="">全部线路</option>
+										<option value="01">1号线</option>
+										<option value="02">2号线</option>	
+										<option value="03">3号线</option>
+										<option value="04">4号线</option>	
+										<option value="05">5号线</option>
+										<option value="06">6号线</option>	
+										<option value="07">7号线</option>
+										<option value="08">8号线</option>	
+										<option value="09">9号线</option>
+										<option value="10">10号线</option>	
+										<option value="11">11号线</option>
+										<option value="12">12号线</option>	
+										<option value="13">13号线</option>
+										<option value="14">14号线</option>	
+										<option value="15">15号线</option>
+										<option value="16">16号线</option>										 							
+									</select>									
+							 <input id="date" name="date" class="laydate-icon" style="width:37%;" value="20150302"></input>		
+						  </td>							
+					  </tr>
+					</table>
+			</form>
+			<div id="link" class="link" ><h1 ><a style="color:white"  href="../BMap/example4.html">查看进站OD》</a></h1></div>
+			 	
+			  </div>
+			 	<div id="list" class="list">
+			 	</div>	    
+               <div class="main" id="main"></div>
+               
+  </div>  
+  </body>
+ 
+   <script type="text/javascript"> 
+ $.cxSelect.defaults.url = '../../json/cityData.min.json'; 
+ $.cxSelect.defaults.nodata = 'none';  
+  // selects 为数组形式，请注意顺序 
+$('#element_id').cxSelect({ 
+required:true,
+  url: '../../json/cityData.min.json',   // 提示：如果服务器不支持 .json 类型文件，请将文件改为 .js 文件 
+  selects: ['province', 'city'], 
+  nodata: 'none' 
+}); 
+  </script>
+  <script type="text/javascript"> 
+    function queryPage(){    
+    myChart.showLoading({
+					text : '数据获取中',
+					effect: 'dynamicLine'
+				}),				
+   $.ajax({
+            //提交数据的类型 POST GET
+            type:"POST",
+            //提交的网址
+            url:"../../echartsServlet",
+            //提交的数据            
+             data:{id:$("#city").val(),OUT_SITE_CODE:$("#OUT_SITE_CODE").val(),date:$("#date").val()},
+            //返回数据的格式
+            datatype: "json",//"xml", "html", "script", "json", "jsonp", "text".
+            //在请求之前调用的函数
+            // beforeSend:
+            //成功返回之后调用的函数             
+            success:function(data){ 
+            	myChart.hideLoading(); 
+       
+              option.series[0].markLine.data=data;    
+
+			  myChart = BMapExt.initECharts(container);
+			  myChart.clear();
+			  
+              BMapExt.setOption(option); 
+             
+              var json=eval(data);
+              var msg="";
+              var total=0;
+              var i;
+  for( i=0; i<data.length; i++)  
+  {  //jQuery("<div class="row"> <span class="serial-number col">2</span><a href="javascript:;" class="col city-name">天津</a><i class="col i i11"></i><a href="javascript:;" class="col-3 city-name">北京</a><span class="percent"><span data="perMil">23.5</span>％</span> </div>").appendTo(jQuery("#"+list));
+  	  if(i<15){
+  	  	msg=msg+"<div class='row'> <span class='serial-number col'>"+(i+1)+"</span>";
+  	  	  	  
+  	    msg=msg+"<a style='color:white' href='javascript:;' class='col city-name'>"+json[i][0].name+"</a>";
+  	      	   
+  	    msg=msg+"<i class='col i i11'></i><a style='color:white' href='javascript:;'  class='col-3 city-name'>"+json[i][1].name+"</a>";  
+  	    	    
+  	    msg=msg+"<span class='percent'><span style='color: #ffd429' data='perMil'>"+json[i][1].value+"</span>";  	  
+  	   
+  	    msg=msg+"</span></div>";
+  	    
+  	    total=total+parseInt(json[i][1].value);
+  	    
+  	    continue;
+  	    }
+  	    total=total+parseInt(json[i][1].value);
+ 
+    // alert(json[i][0].name+" "+json[i][1].name+" " + json[i][1].value);  
+  } $("#list").empty();       
+   $("#list").append(msg);
+   //alert(total);
+   var no=i<15?(i+1):16;
+   $("<div class='row'> <span class='serial-number col'>"+(no)+"</span><a style='color:white' href='javascript:;' class='col city-name'>"+'汇总'+"</a><span class='percent'><span style='color: #ffd429' data='perMil'>"+total+"</span></span> </div>").appendTo($("#list"));  
+            },
+            //调用执行后调用的函数
+            complete: function(XMLHttpRequest, textStatus){ 
+              
+            },
+            //调用出错执行的函数
+            error: function(){
+                //请求出错处理
+            }         
+         });
+
+  }  
+  </script>
+  
+  <link href="../../laydate-master/skins/yalan/laydate.css"  rel="stylesheet" type="text/css"  /> 
+  <script type="text/javascript" src="../../laydate-master/laydate.dev.js"></script>
+ 
+<script>
+laydate({
+    elem: '#date', //目标元素。由于laydate.js封装了一个轻量级的选择器引擎，因此elem还允许你传入class、tag但必须按照这种方式 '#id .class'
+    format: 'YYYYMMDD',
+    festival: true, //显示节日
+   // event: 'focus' //响应事件。如果没有传入event，则按照默认的click
+});
+</script>
+ 
+</html>

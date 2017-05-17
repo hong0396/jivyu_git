@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>地铁交通轨道周边人群统计分析</title>
+<!-- <meta http-equiv="Access-Control-Allow-Origin" content="*"> -->
+<meta http-equiv="Access-Control-Allow-Origin" content="*">	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">   
+     <!-- start -->
+        <script src="../../extension/js/jquery.min.js"></script>        
+        <script src="../../js/jquery.cxselect.js"></script>
+        <!-- end -->	
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->    
+<script src="../../extension/js/echarts.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>  
+<script src="../../extension/js/statistics.js"></script>
+</head>
+<style type="text/css">
+body, html {font-family:"微软雅黑";margin:0;}		
+p{margin-left:5px; font-size:15px;}
+body { font-size:12px; margin:0;}
+#container {margin:0 auto; width:100%;overflow: hidden;z-index:0}
+ .main{ width:100%; height:666px; z-index:16;position:fixed;  }
+.menu { 
+ width:66%;
+ position:absolute; 
+ margin-top: 1%;
+ z-index:6;
+ background-color:rgba(0,0,0,0.3);
+ filter: Alpha(Opacity=10, Style=0);
+   border-radius:5px;
+  height: 50px;
+  padding-left: 5px;
+  padding-top: 12px;
+ }  
+  .btn {
+  width: 56px;
+  border-color: rgba(0, 0, 0, 0.25);
+ border-radius:5px;
+position:absolute; 
+  margin-top: -100px;
+  margin-left:1%;
+  font-size: 14px;
+  /*letter-spacing: 2px;*/
+  line-height: 45px;
+  color: #FFF;
+  text-align: center;  
+  vertical-align: middle;
+  cursor: pointer;
+  background-color: #00a900;
+}
+ .r{
+   
+  position: fixed;
+  bottom: 510px;
+  z-index: 100;
+  height: 40px;
+  margin-left:10px;
+ 
+ }
+ .link{
+    position: fixed;
+    width: 122px;
+    height: 52px;
+    padding-left: 17px;
+    top: 1%;
+    z-index: 520;
+    right: 15px;
+    background-color: rgba(10, 30, 90, 0.3);
+    border-radius:5px;
+}
+</style> 
+ <body>
+  <div id="container">   
+		   <div class="menu" id="menu">
+		    <form id="form1" action="" method="post">
+					<table cellspacing="0" class="mytable">
+					<tr> 
+					<td  class="r1" ><div style="width:74px;color:white;">站&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点</div></td>
+								<td class="r2">
+							   <div  id="element_id" >						    						  
+	  							<select class="province"></select> 
+	  							<select class="city" id="city" name="city"></select> 			
+							  </div>
+						       </td>	
+						
+		   					<td class="r1"><div style="width:74px;color:white;">开始时间</div></td>
+							<td  class="r2">	
+								<input id="begintime" name="begintime" class="laydate-icon" style="width:74%;" value="2015-08-20 09"  onclick="laydate({istime: true, format: 'YYYY-MM-DD hh'});"></input>	
+						<!--  	<input id="date" name="date" class="laydate-icon" style="width:50%;" value="20150302"></input>-->
+						       
+		   						<td class="r1"><div style="width:74px;color:white;">结束时间</div></td>
+							<td  class="r2">	
+								<input id="endtime" name="endtime" class="laydate-icon" style="width:74%;" value="2015-08-20 19"  onclick="laydate({istime: true, format: 'YYYY-MM-DD hh'});"></input>	
+						      
+						  	<td class="r">
+								<a id="query" class="btn" href="javascript:queryPage();"><strong>查询</strong></a>
+								</td>										
+					  </tr> 					
+					</table>
+			</form>
+		   </div>
+		   <div id="link" class="link"><h1 ><a style="color:white" href='../../main.jsp'>返回首页</a></h1></div>
+		    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div class="main" id="main" style="position: fixed;"></div>   
+     </div> 
+</body>  
+<script type="text/javascript">
+ $.cxSelect.defaults.url = '../../json/trainNum.json'; 
+ $.cxSelect.defaults.nodata = 'none';  
+  // selects 为数组形式，请注意顺序 
+$('#element_id').cxSelect({ 
+required:true,
+  url: '../../json/trainNum.json',   // 提示：如果服务器不支持 .json 类型文件，请将文件改为 .js 文件 
+  selects: ['province', 'city'], 
+  nodata: 'none' 
+}); 
+</script>
+<script type="text/javascript">  
+    var lines=new Array();
+    var points=new Array();
+   var geo=new Array();//地理位置//测试中
+   var geoCoord={};//测试中
+    function queryPage(){
+   
+	lines.length = 0;
+	points.length = 0;
+
+    myChart.showLoading({
+				text : '玩命加载中',
+				effect: 'whirling'
+				});
+      $.ajax({  
+           url: "../../HttpPostServlet",  
+            type: "POST",  
+            data: {trainNum:$("#city").val(),begintime:$("#begintime").val(),endtime:$("#endtime").val()},  
+         	//async: false,
+            dataType: "json",          
+            success: function(data) {  
+          var jsonData=eval(data[0]); //电信那边过来的数据
+          var jsonData2=eval(data[1]);//百度api由经纬度获取地理位置名称
+          var jsonData3=eval(data[2]);//用于信息窗口显示地铁人流详细信息
+         
+          var Sta_total=0;
+          if(jsonData3!=null){
+          	for(var i=0;i<jsonData3.length;i++){
+           Sta_total=Sta_total+parseInt(jsonData3[i][1].value);
+          }  
+          }
+           
+                
+     	  var allOverlay = map.getOverlays();  //清除覆盖物   	
+		for (var i = 0; i < allOverlay.length -1; i++){			
+			map.removeOverlay(allOverlay[i]);				
+		}
+		showStationName();//显示地铁站点名称
+    	 var marker;
+    	
+    	var total=0;//小区总人数
+    	if(jsonData!=null)
+          for(var i=0;i<jsonData.length;i++){           
+          marker = new BMap.Marker(new BMap.Point(jsonData[i][3],jsonData[i][4])); // 创建点
+          marker.setTitle(jsonData[i][0]);        
+          		
+          		
+          		map.addOverlay(marker);
+          
+                lines.push([{"name":jsonData2[i].result.sematic_description}, {"name":'莘庄',"value":+ jsonData[i][6]}]);
+                points.push({"name":jsonData2[i].result.sematic_description,"value":+ jsonData[i][6] }); 
+              //  geo.push(jsonData[i][3]+','+jsonData[i][4]);//测试中
+               
+                total=total+jsonData[i][6];     			
+          }
+          
+          /*************************************************************************************/
+         	// 百度地图API功能	
+	var myIcon = new BMap.Icon("../../extension/BMap/images/subwayicon.png", new BMap.Size(23,23));
+    	 
+	var point = new BMap.Point(121.391623,31.116581);
+	//var Sta_marker = new BMap.Marker(point);  // 创建标注
+	var Sta_marker = new BMap.Marker(point,{icon:myIcon});  // 创建标注
+	map.addOverlay(Sta_marker);              // 将标注添加到地图中
+	//map.centerAndZoom(point, 15);
+	var opts = {
+	  width : 146,     // 信息窗口宽度
+	  height: 90,     // 信息窗口高度
+	  title : "莘庄站:" , // 信息窗口标题
+	  enableMessage:true//设置允许信息窗发送短息
+	 // message:"亲耐滴，晚上一起吃个饭吧？戳下面的链接看下地址喔~"
+	};
+	var namea="周边小区总人数:  ";
+	var nameb="交通卡进站总人数: ";
+	var infoWindow = new BMap.InfoWindow(namea+total.toString()+"人"+"<br>"+nameb+Sta_total.toString()+"人", opts);  // 创建信息窗口对象 
+	Sta_marker.addEventListener("onmouseover", function(){          
+		map.openInfoWindow(infoWindow,point); //开启信息窗口
+	});
+  	Sta_marker.addEventListener("onmouseout", function(){          
+		map.closeInfoWindow(infoWindow,point); //开启信息窗口
+	});
+        
+         /*****************************************************************************************/ 
+         		//option.series[0].geoCoord={};//测试中	
+				option.series[0].markLine.data = lines;
+				option.series[0].markPoint.data = points;
+			
+				myChart.hideLoading();
+
+				BMapExt.setOption(option);
+
+			},
+			complete : function(XMLHttpRequest, textStatus) {
+
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+				alert("不好意思，大爷，图表请求数据失败啦!");
+			}
+
+		});
+
+	}
+</script>
+<script type="text/javascript">
+       function showStationName(){
+    	   var latlons=geoCoord_b;
+    	   	for(var k in latlons){
+    	    		var points = new BMap.Point(latlons[k][0],latlons[k][1]);
+    	    		//创建小狐狸    		
+    	    
+    	    		var myIcon = new BMap.Icon("../../extension/BMap/images/subwayicon.png", new BMap.Size(23,23));
+    	   var marker = new BMap.Marker(points,{icon:myIcon});  // 创建标注	
+    	   	marker.setTitle(k);
+    	   	map.addOverlay(marker);              // 将标注添加到地图中
+    	   	
+    	        
+    	  	}    
+    	    function setLb(marker,k){
+    	    	var label = new BMap.Label(k,{offset:new BMap.Size(20,-10)}); 
+    	    	marker.setLabel(label);
+    	    }
+       }
+</script>
+
+<link href="../../laydate-master/skins/yalan/laydate.css"  rel="stylesheet" type="text/css"  /> 
+  <script type="text/javascript" src="../../laydate-master/laydate.dev.js"></script> 
+
+</html>

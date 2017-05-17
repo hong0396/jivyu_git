@@ -1,0 +1,33 @@
+
+input,button,textarea,select{font-size:100%;}
+*{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;font-family:"Microsoft YaHei"}
+body,html{height:100%;background:#031529}
+
+
+.i{display:inline-block;
+background:url('http://bcscdn.baidu.com/baidu-qianxi/chuxing/images/icon-common.png');
+vertical-align:middle;cursor:pointer;}
+
+
+
+.list 
+.row{color: white;margin-bottom:12px;text-align:left;position:relative;}
+
+.serial-number{border-radius:4px;height:20px;width:20px;line-height:20px;background-color:#008cff;text-align:center;display:inline-block;}
+.percent{color:#2fb8ff;width:50px;display:inline-block;}
+.page-box{text-align:center;margin-top:20px;position:relative;z-index:1000;}
+.dataSrc-box{margin-top:30px;position:static;}
+.return-1{display:block;margin-bottom:20px;text-align:center;}
+.back-btn-1{display:inline-block;padding:3px 6px 3px 5px;border-radius:4px;margin:0 auto;border:1px solid #8095ae;cursor:pointer;text-align:center;color:#8095ae;}
+.back-btn-1:hover{background-color:#008cff;color:#fff;border:1px solid #008cff;}
+.i11{width:36px;height:11px;background-position:-7px -152px;}
+.city-name{
+	
+	width:57px;display:inline-block;}
+	  
+
+.city-name{
+	text-decoration: none;
+	margin-left:6px;
+	width:100px;}
+

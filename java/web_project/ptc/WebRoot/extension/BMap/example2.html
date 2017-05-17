@@ -1,0 +1,294 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta charset="utf-8">
+       
+        <!-- start -->
+        <script src="../../js/jquery-1.8.2.min.js"></script> 
+        <script src="../../js/jquery.cxselect.js"></script>
+        <!-- end -->
+		<script src="../../extension/js/echarts.js"></script>
+				
+        <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+            <link href="../../extension/BMap/qianxi.css"  rel="stylesheet" type="text/css"  />   
+	
+        <script src="../../extension/js/example2.js"></script>		
+		<link href="../../extension/BMap/center.css"  rel="stylesheet" type="text/css"  />
+	
+	<title>交通卡数据服务平台</title>
+  </head>
+<style type="text/css">
+body { font-family:Verdana; font-size:14px; margin:0;}
+#container {margin:0 auto; width:100%;overflow: hidden;z-index:0}
+
+ .menu { width:359PX;
+ position:fixed; 
+ margin-top: 3px;
+ z-index:6;
+ 
+ filter: Alpha(Opacity=10, Style=0); }
+ a{text-decoration:none}
+ .link {
+   height:9%;
+   width: 11%;
+	padding:13px;	
+	border-radius:5px;
+   position:fixed; 
+  
+   z-index:125;
+   filter: Alpha(Opacity=10, Style=0);
+   margin-left: 91%;
+   margin-top: 25px; 
+  background: none;
+  background-color: rgba(0,0,0,0.5);
+   
+   }
+    .list {
+  height:80%;
+   width: 350px;
+	
+	
+   position:fixed; 
+   z-index:6;
+   filter: Alpha(Opacity=10, Style=0);
+   margin-left: 0.65%;
+   margin-top: 104.5px; 
+  background: none;
+  background-color: rgba(0,0,0,0.6); 
+   
+   }
+ .r2{  z-index:40;width:10px; height:16px; }
+ .main{ width:100%; height:100%; z-index:10;  }
+#element_id {	
+  
+	width:250;
+	word-break:break-all;
+	vertical-align:middle;
+	margin-bottom:10px;
+	 padding-left:0px;
+	   
+}
+*{margin:0;padding:0;list-style-type:none;}
+a,img{border:0;}
+
+.box_button{
+height:50px;
+width:50px; 
+ margin-top: 36px;
+ text-align:center;
+ vertical-align:middle;
+ float:left;
+ cursor:help; 
+
+z-index:160;}
+.hidden{
+
+width:362px;
+height:581px;
+
+float:left;
+
+border-bottom:none;
+z-index:5;
+}
+
+.box_wrap{position:fixed;z-index:100;top:0;left:0;_position:absolute;_top:expression(documentElement.scrollTop + 0 + "px");_left:expression(documentElement.scrollLeft + 0 + "px");margin:30px 0 0 0;}
+</style>
+<body>
+     <div id="container">   
+      <div class="box_wrap">
+     <div id="hidden" class="hidden">
+		   <div class="menu" id="menu">		       
+			  <form id="form1" action="" method="post">
+					<table cellspacing="0" class="mytable"> 
+						<tr> 
+							<td class="r1"><div style="width:60px;">进  站</div></td>
+							<td  class="r2" style="width:30%;">	
+									<select class='inputbox'  style="width:26.5%;" id="insitecode" name="insitecode">									
+										<option value="">全部线路</option>
+										<option value="01">1号线</option>
+										<option value="02">2号线</option>	
+										<option value="03">3号线</option>
+										<option value="04">4号线</option>	
+										<option value="05">5号线</option>
+										<option value="06">6号线</option>	
+										<option value="07">7号线</option>
+										<option value="08">8号线</option>	
+										<option value="09">9号线</option>
+										<option value="10">10号线</option>	
+										<option value="11">11号线</option>
+										<option value="12">12号线</option>	
+										<option value="13">13号线</option>
+										<option value="14">14号线</option>	
+										<option value="15">15号线</option>
+										<option value="16">16号线</option>										 							
+									</select>		
+							<input id="date" name="date" class="laydate-icon" style="width:37%;" value="20150302"></input>
+							<td class="r3" rowspan="2">
+								<a id="query" class="btn" href="javascript:queryPage();"><strong>查询</strong></a>
+							</td>			 	   
+						</tr>							
+		   				<tr>
+		   					<td  class="r1" ><div style="width:60px;">出  站</div></td>
+								<td class="r2" style="width:70%;">
+							   <div  id="element_id" >						    						  
+	  							<select class="province"></select> 
+	  							<select class="city" id="city" name="city"></select> 			
+							  </div>
+														
+							 		
+						  </td>							
+					  </tr>
+					</table>
+			</form>
+			 </div>
+			 	<div id="list" class="list"></div>
+			 	
+			</div> 	
+			 	<div class="box_button"><a style="display:block;" href="#" id="box_link"><img id="box_img" src="./images/open.png" width="50" height="50" border="0" /></a></div>
+			</div>
+			 	<div id="link" class="link" ><tr><h1 ><a  style="color:white" href="../BMap/example.html">查看出站OD-》</a></h1></tr>
+			 	<tr><h1 ><a style="color:white" href='../../main.jsp'>《-返回首页</a></h1></tr>
+			 	</div>		    
+               <div class="main" id="main"></div>
+  </div>  
+  </body>
+ <script type="text/javascript">
+$(function(){
+
+	$(".hidden").hide();//或 list
+	
+	//$('#menu ul').hide();
+	//$("#box_img").attr("src", "images/qm.png");
+	
+	$("#box_link").toggle(function(){
+		$(".hidden").show(function(){ //或 list
+			$(".hidden").animate({width:"362"},500); //或 list
+			$(".menu").animate({width:"358"},500);
+			$(".list").animate({width:"350"},500);
+			//$(".row").animate({width:"350"},500);
+	  // $(".col-3 city-name").animate({width:"180"},500);
+		});
+		$("#box_img").attr("src", "./images/close.png");
+	},function(){
+		$(".hidden").animate({width:"0"},500,function(){ //或 list
+			//$(".hidden").hide(); //或 list
+			$("#box_img").attr("src", "./images/open.png");
+		});	
+		$(".menu").animate({width:"0"},500);	
+		
+		$(".list").animate({width:"0"},500);
+		//$(".row").animate({width:"0"},500);
+	  // $(".col-3 city-name").animate({width:"0"},500);
+		
+	});
+		
+});
+</script>
+   <script type="text/javascript"> 
+
+   
+   
+ $.cxSelect.defaults.url = '../../json/cityData.min.json'; 
+ $.cxSelect.defaults.nodata = 'none';  
+  // selects 为数组形式，请注意顺序 
+$('#element_id').cxSelect({ 
+required:true,
+  url: '../../json/cityData.min.json',   // 提示：如果服务器不支持 .json 类型文件，请将文件改为 .js 文件 
+  selects: ['province', 'city'], 
+  nodata: 'none' 
+}); 
+  </script>
+  <script type="text/javascript">
+  
+    function queryPage(){
+    myChart.showLoading({
+					text : '数据获取中',
+					effect: 'whirling'
+				}),
+   $.ajax({
+            //提交数据的类型 POST GET
+            type:"POST",
+            //提交的网址
+            url:"../../echartsServlet2",
+            //提交的数据
+             data:{outsitecode:$("#city").val(),insitecode:$("#insitecode").val(),date:$("#date").val()},
+            //返回数据的格式
+            datatype: "json",//"xml", "html", "script", "json", "jsonp", "text".
+            //在请求之前调用的函数
+            // beforeSend:
+            //成功返回之后调用的函数             
+            success:function(data){ 
+            	myChart.hideLoading();                     
+           
+       
+              option.series[0].markLine.data=data;    
+
+			 	 /****************设置地图中心********************/
+			   var centername=data[0][1].name;
+			   var latlons=option.series[0].geoCoord;    
+   				for(var k in latlons){
+   	 			  if(centername==k)
+    				{var point = new BMap.Point(latlons[k][0],latlons[k][1]);    		
+     	 		  map.centerAndZoom(point, 13);
+     	 		  map.enableScrollWheelZoom(true);
+    					}	
+   			 }	  
+		 /****************************************/	
+			  myChart.clear();
+			  
+              BMapExt.setOption(option); 
+               var json=eval(data);
+              var msg="";
+              var total=0;
+              var i;
+  for( i=0; i<data.length; i++)  
+  {  //jQuery("<div class="row"> <span class="serial-number col">2</span><a href="javascript:;" class="col city-name">天津</a><i class="col i i11"></i><a href="javascript:;" class="col-3 city-name">北京</a><span class="percent"><span data="perMil">23.5</span>％</span> </div>").appendTo(jQuery("#"+list));
+  	  if(i<15){
+  	  	msg=msg+"<div class='row' style='padding-left:12px;'> <span class='serial-number col'>"+(i+1)+"</span>";
+  	  	  	  
+  	    msg=msg+"<a style='color: #0088cc' href='javascript:;' class='col city-name'>"+json[i][0].name+"</a>";
+  	      	   
+  	    msg=msg+"<i class='col i i11'></i><a style='color: #0088cc' href='javascript:;'  class='col-3 city-name'>"+json[i][1].name+"</a>";  
+  	    	    
+  	    msg=msg+"<span class='percent'><span data='perMil'>"+json[i][1].value+"</span>";  	  
+  	   
+  	    msg=msg+"</span></div>";
+  	    
+  	    total=total+parseInt(json[i][1].value);
+  	    
+  	    continue;
+  	    }
+  	    total=total+parseInt(json[i][1].value);
+ 
+    // alert(json[i][0].name+" "+json[i][1].name+" " + json[i][1].value);  
+  } $("#list").empty();       
+   $("#list").append(msg);
+   //alert(total);
+   var no=i<15?(i+1):16;
+   $("<div class='row' style='padding-left:12px;'> <span class='serial-number col'>"+(no)+"</span><a style='color: #0088cc' href='javascript:;' class='col city-name'>"+'汇总'+"</a><span class='percent'><span data='perMil'>"+total+"</span></span> </div>").appendTo($("#list"));  
+               
+            },
+            //调用执行后调用的函数
+            complete: function(XMLHttpRequest, textStatus){
+              
+            },
+            //调用出错执行的函数
+            error: function(){
+                //请求出错处理
+            }         
+         });
+
+  }  
+  </script>
+  <link href="../../laydate-master/skins/yalan/laydate.css"  rel="stylesheet" type="text/css"  /> 
+  <script type="text/javascript" src="../../laydate-master/laydate.dev.js"></script>
+ 
+<script>
+laydate({
+    elem: '#date', //目标元素。由于laydate.js封装了一个轻量级的选择器引擎，因此elem还允许你传入class、tag但必须按照这种方式 '#id .class'
+    format: 'YYYYMMDD',
+    event: 'focus' //响应事件。如果没有传入event，则按照默认的click
+});
+</script>  
+</html>

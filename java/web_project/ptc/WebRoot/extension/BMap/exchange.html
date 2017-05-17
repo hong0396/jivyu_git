@@ -1,0 +1,160 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style type="text/css">
+  body { font-family:Verdana; font-size:14px; margin:0;}
+  .wrapper{
+  width: 100%;
+   height:100%;
+    position:fixed;
+
+  }
+  #container{
+  width: 100%;
+   height:100%;
+ 
+  z-index:20;
+  }
+  #menu{
+top:20px;
+margin-left:20px;
+  width:300px;
+  height:20px;
+  position:fixed;
+  z-index:999;
+  
+  }
+  </style>
+  <script src="http://libs.baidu.com/jquery/2.0.0/jquery.js" charset='utf-8'></script>
+   <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+   <script type="text/javascript" src="http://api.map.baidu.com/library/LuShu/1.2/src/LuShu_min.js"></script>
+  <link href="../../extension/BMap/center.css"  rel="stylesheet" type="text/css"  />
+    <title>换乘路书</title>
+</head>
+<body>
+	<div class="wrapper">
+	 
+		<div style=" width: 100%; height:100%; " id="container"></div>
+		<div id="menu" class="menu">
+			
+			 <form id="form1" action="" method="post">
+					<table  class="mytable">
+					<tr> 
+				<td class="r1"><div style="width:30px;color:white;">日  期</div></td>
+					<td  class="r2">								
+						<input id="date" name="date" class="laydate-icon" style="width:57%;" value="20150401"></input>
+							
+						    	<td>
+								<a id="query" class="btn" href="javascript:queryPage();"><strong>播放</strong></a>
+							</td>													
+					  </tr> 				
+					</table>					 
+			</form>			
+			
+		</div>
+	</div>
+
+</body>
+<script type="text/javascript">
+	var map = new BMap.Map("container"); // 创建map
+	map.enableScrollWheelZoom();
+    map.setMapStyle({style:'midnight'});
+	map.centerAndZoom(new BMap.Point(121.391169, 31.172226), 14);
+	map.addControl(new BMap.MapTypeControl({mapTypes: [BMAP_NORMAL_MAP,BMAP_HYBRID_MAP]})); 
+	
+	var overView = new BMap.OverviewMapControl();
+	var overViewOpen = new BMap.OverviewMapControl({isOpen:true, anchor: BMAP_ANCHOR_BOTTOM_RIGHT});
+	map.addControl(overView);          //添加默认缩略地图控件
+	map.addControl(overViewOpen);      //右下角，打开
+</script>
+<script type="text/javascript">
+var jsonData;
+ function queryPage(){    
+  		map.clearOverlays();
+  		var lines=new Array();
+  		for(var i=0;i<lines.length;i++){
+	lines[i].stop();
+	
+	}
+   $.ajax({
+            //提交数据的类型 POST GET
+            type:"POST",
+            //提交的网址
+            url:"../../exchangeServlet",
+            //提交的数据            
+             data:{date:$("#date").val()},
+            //返回数据的格式
+            datatype: "json",//"xml", "html", "script", "json", "jsonp", "text".
+            //在请求之前调用的函数
+            // beforeSend:
+            //成功返回之后调用的函数             
+            success:function(data){ 
+            
+            jsonData=eval(data);
+			map.clearOverlays();
+	var icons=new BMap.Icon('http://developer.baidu.com/map/jsdemo/img/car.png', new BMap.Size(52,26),{anchor : new BMap.Size(27, 13)});
+	//var obj;
+	
+	var points=new Array();
+	var marks=new Array();
+	for(var i=0;i<jsonData.length;i++){
+	
+	points=new Array();
+	marks=new Array();
+	
+	for ( var j = 0; j < jsonData[i].length; j++) {
+						
+	var point = new BMap.Point(jsonData[i][j].lng,jsonData[i][j].lat);
+	
+	points.push(point);
+	
+	marks.push({lng : jsonData[i][j].lng,lat : jsonData[i][j].lat,html : jsonData[i][j].name + jsonData[i][j].num,pauseTime : 1});
+	
+					}
+	var polyline = new BMap.Polyline(points, {strokeColor : 'yellow'}); //创建折线
+
+	map.addOverlay(polyline); //绘制折线  
+	obj = new BMapLib.LuShu(map, points, {
+						defaultContent : "-",
+						autoView : true, //是否开启自动视野调整，如果开启那么路书在运动过程中会根据视野自动调整
+						icon : icons,
+						enableRotation : true, //是否设置marker随着道路的走向进行旋转
+						speed : 3500,
+						landmarkPois : marks
+					});
+	//obj.start();
+	lines.push(obj);
+}
+	for(var i=0;i<lines.length;i++){
+	lines[i].start();
+	
+	}
+	map.setViewport(points);
+
+			},
+			//调用执行后调用的函数
+			complete : function(XMLHttpRequest, textStatus) {
+
+			},
+			//调用出错执行的函数
+			error : function() {
+				alert("error!");
+				//请求出错处理
+			}
+		});
+
+	}
+</script>
+<link href="../../laydate-master/skins/yalan/laydate.css"  rel="stylesheet" type="text/css"  /> 
+  <script type="text/javascript" src="../../laydate-master/laydate.dev.js"></script>
+ 
+<script>
+laydate({
+    elem: '#date', //目标元素。由于laydate.js封装了一个轻量级的选择器引擎，因此elem还允许你传入class、tag但必须按照这种方式 '#id .class'
+    format: 'YYYYMMDD',
+    event: 'focus' //响应事件。如果没有传入event，则按照默认的click
+});
+</script>  
+</html>

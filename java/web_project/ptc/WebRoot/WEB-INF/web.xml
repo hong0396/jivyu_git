@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+  <display-name></display-name>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>echartsServlet</servlet-name>
+    <servlet-class>servlet.echartsServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>echartsServlet2</servlet-name>
+    <servlet-class>servlet.echartsServlet2</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>InterfaceServlet</servlet-name>
+    <servlet-class>servlet.InterfaceServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>InterfaceServlet2</servlet-name>
+    <servlet-class>servlet.InterfaceServlet2</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>InterfaceServlet3</servlet-name>
+    <servlet-class>servlet.InterfaceServlet3</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>InterfaceServlet4</servlet-name>
+    <servlet-class>servlet.InterfaceServlet4</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>InterfaceServlet5</servlet-name>
+    <servlet-class>servlet.InterfaceServlet5</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>echartsServletByHour</servlet-name>
+    <servlet-class>servlet.echartsServletByHour</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>echartsServletByHourIn</servlet-name>
+    <servlet-class>servlet.echartsServletByHourIn</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>SubWayAnalysisServlet</servlet-name>
+    <servlet-class>servlet.SubWayAnalysisServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>SubwayAnalysisServletByDay</servlet-name>
+    <servlet-class>servlet.SubwayAnalysisServletByDay</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>SubWayAnalysisServletByMonth</servlet-name>
+    <servlet-class>servlet.SubWayAnalysisServletByMonth</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>HeatmapServlet</servlet-name>
+    <servlet-class>servlet.HeatmapServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>PredictLineServlet</servlet-name>
+    <servlet-class>servlet.PredictLineServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>HttpPostServlet</servlet-name>
+    <servlet-class>servlet.HttpPostServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>BigEventServlet</servlet-name>
+    <servlet-class>servlet.BigEventServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>SmallOdServlet</servlet-name>
+    <servlet-class>servlet.SmallOdServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>exchangeServlet</servlet-name>
+    <servlet-class>servlet.exchangeServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>echartsServlet</servlet-name>
+    <url-pattern>/echartsServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>echartsServlet2</servlet-name>
+    <url-pattern>/echartsServlet2</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>InterfaceServlet</servlet-name>
+    <url-pattern>/InterfaceServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>InterfaceServlet2</servlet-name>
+    <url-pattern>/InterfaceServlet2</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>InterfaceServlet3</servlet-name>
+    <url-pattern>/InterfaceServlet3</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>InterfaceServlet4</servlet-name>
+    <url-pattern>/InterfaceServlet4</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>InterfaceServlet5</servlet-name>
+    <url-pattern>/InterfaceServlet5</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>echartsServletByHour</servlet-name>
+    <url-pattern>/echartsServletByHour</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>echartsServletByHourIn</servlet-name>
+    <url-pattern>/echartsServletByHourIn</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SubWayAnalysisServlet</servlet-name>
+    <url-pattern>/SubWayAnalysisServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SubwayAnalysisServletByDay</servlet-name>
+    <url-pattern>/SubwayAnalysisServletByDay</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SubWayAnalysisServletByMonth</servlet-name>
+    <url-pattern>/SubWayAnalysisServletByMonth</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>HeatmapServlet</servlet-name>
+    <url-pattern>/HeatmapServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>PredictLineServlet</servlet-name>
+    <url-pattern>/PredictLineServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>HttpPostServlet</servlet-name>
+    <url-pattern>/HttpPostServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>BigEventServlet</servlet-name>
+    <url-pattern>/BigEventServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SmallOdServlet</servlet-name>
+    <url-pattern>/SmallOdServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>exchangeServlet</servlet-name>
+    <url-pattern>/exchangeServlet</url-pattern>
+  </servlet-mapping>
+  <welcome-file-list>
+    <welcome-file>main.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>

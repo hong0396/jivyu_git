@@ -1,0 +1,10 @@
+package dao;
+
+import java.util.List;
+
+import model.Echarts;
+
+public interface EchartsDao {
+	public abstract List<Echarts> getDatasIn(String id,String outcode,String date);
+	public abstract List<Echarts> getDatasOut(String insitecode,String outsitecode,String date);
+}

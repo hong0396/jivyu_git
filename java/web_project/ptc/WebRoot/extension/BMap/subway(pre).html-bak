@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>轨道交通小时段换乘比例</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+     <!-- start -->
+        <script src="../../js/jquery-1.8.2.min.js"></script> 
+        <script src="../../js/jquery.cxselect.js"></script>
+        <!-- end -->
+	
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+      <link rel="stylesheet" type="text/css" href="../../easyui/themes/bootstrap/easyui.css"></link>
+		<link rel="stylesheet" type="text/css" href="../../easyui/themes/icon.css"></link>
+		<link rel="stylesheet" type="text/css" href="../../easyui/themes/demo.css"></link>
+          <script type="text/javascript" src="../../easyui/jquery.easyui.min.js"></script>  
+ <script src="../../extension/js/echarts.js"></script>
+    <script src="../../extension/js/subway.js"></script>
+     <script src="../../extension/theme/macarons.js"></script>
+  </head>
+  <style type="text/css">
+
+  .main{
+  width:670px;
+  height:500px;
+position:fixed;
+top:166px;
+ z-index:16; 
+  }
+    .main2{
+  width:670px;
+  height:500px;
+position:fixed;
+margin-left:675px;
+top:166px;
+ z-index:16; 
+  }
+  .btn {
+ /* border-color: #018501;*/
+ border-color: rgba(0, 0, 0, 0.25);
+  display: inline-block;
+  padding: 4px 7px;
+  margin-top: 8px;
+  margin-left: 20px;
+  font-size: 14px;
+  letter-spacing: 2px;
+  line-height: 45px;
+  color: #FFF;
+  text-align: center;  
+  vertical-align: middle;
+  cursor: pointer;
+  background-color: #00a900;
+}
+ .r{
+   
+  position: fixed;
+  bottom: 510px;
+  z-index: 100;
+  height: 40px;
+  margin-left:10px;
+ 
+ }
+ .easyui-slider{
+ position: fixed;
+ }
+
+</style> 
+ <body>
+  <div id="container">   
+		   <div class="menu" id="menu">
+		    <form id="form1" action="" method="post">
+					<table cellspacing="0" class="mytable">
+					<tr> 
+							<td class="r1"><div style="width:30px;">日  期</div></td>
+							<td  class="r2">	
+									
+							<input id="date" name="date" class="laydate-icon" style="width:37%;" value="20150302"></input>
+								 	   
+						
+		   					<td  class="r1" ><div style="width:30px;">站  点</div></td>
+								<td class="r2">
+							   <div  id="element_id" >						    						  
+	  							<select class="province"></select> 
+	  							<select class="city" id="city" name="city"></select> 			
+							  </div>
+						       </td>	
+						  	<td>
+								<a id="query" class="btn" href="javascript:queryPage();"><strong>查询</strong></a>
+							</td>							
+					  </tr> 
+					</table>
+			</form>
+		   </div>
+		   <div class="r" style="width:100px; position:fixed;">
+			  <input id="easyui-slider" class="easyui-slider" style="width:1300px" data-options="showTip:true,rule: [01,'|',02,'|',03,'|',04,'|',05,'|',06,'|',07,'|',08,'|',09,'|',10,'|',11,'|',12,'|',13,'|',14,'|',15,'|',16,'|',17,'|',18,'|',19,'|',20,'|',21,'|',22,'|',23,'|',24]" value="6" min="1" max="24"></input>
+			 	</div>	
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div class="main" id="main" ></div> 
+    <div class="main2" id="main2" ></div>    
+     </div>
+ 
+</body>
+  
+      <script type="text/javascript">
+ $.cxSelect.defaults.url = '../../json/cityData.min.json'; 
+ $.cxSelect.defaults.nodata = 'none';  
+  // selects 为数组形式，请注意顺序 
+$('#element_id').cxSelect({ 
+required:true,
+  url: '../../json/cityData.min.json',   // 提示：如果服务器不支持 .json 类型文件，请将文件改为 .js 文件 
+  selects: ['province', 'city'], 
+  nodata: 'none' 
+}); 
+
+</script>
+<script type="text/javascript">
+ 
+  
+    function queryPage(){
+    myChart.showLoading({
+					text : '玩命加载中',
+					effect: 'whirling'
+				});
+	 myChart2.showLoading({
+					text : '玩命加载中',
+					effect: 'whirling'
+				});			
+   $.ajax({
+            //提交数据的类型 POST GET
+            type:"POST",
+         // async: false, //同步执行
+            //contentType:"application/json;charset=utf-8",
+            //提交的网址
+            url:"../../SubWayAnalysisServlet",
+            //提交的数据
+             data:{sitecode:$("#city").val(),date:$("#date").val(),time:$("#easyui-slider").val()},
+            //返回数据的格式
+            datatype: "json",//"xml", "html", "script", "json", "jsonp", "text".
+            //在请求之前调用的函数
+            // beforeSend:
+            //成功返回之后调用的函数             
+            success:function(result){
+       //  alert(result);
+          
+           // option.series[0].data=result;
+          option.legend.data = result[0];
+          option.series[0].data=result[0];
+          
+          option2.legend.data = result[1];
+          option2.series[0].data=result[1];
+          
+          
+          /*  options.xAxis[0].data = result.category;
+		options.series = result.series;
+		options.legend.data = result.legend;
+		*/
+		// myChart = BMapExt.initECharts(container);
+				
+		 myChart.clear();
+		   myChart.hideLoading();
+		myChart.setOption(option);
+		myChart.setTheme(theme);
+		myChart2.clear();
+		   myChart2.hideLoading();
+		myChart2.setOption(option2);
+         myChart2.setTheme(theme);          
+            },
+            //调用执行后调用的函数
+            complete: function(XMLHttpRequest, textStatus){              
+            },
+            //调用出错执行的函数
+            error: function(){
+                //请求出错处理
+                alert("不好意思，大爷，图表请求数据失败啦!");
+            }         
+         });
+
+  }  
+
+</script>
+<link href="../../laydate-master/skins/yalan/laydate.css"  rel="stylesheet" type="text/css"  /> 
+  <script type="text/javascript" src="../../laydate-master/laydate.dev.js"></script>
+ 
+<script>
+laydate({
+    elem: '#date', //目标元素。由于laydate.js封装了一个轻量级的选择器引擎，因此elem还允许你传入class、tag但必须按照这种方式 '#id .class'
+    format: 'YYYYMMDD',
+    event: 'focus' //响应事件。如果没有传入event，则按照默认的click
+});
+</script> 
+</html>

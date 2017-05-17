@@ -1,0 +1,245 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title></title>
+<meta charset="utf-8">
+<style type="text/css">
+.menu {
+	width: 359PX;
+	position: fixed;
+	margin-top: 0px;
+	z-index: 6;
+	border-radius:10px;
+	filter: Alpha(Opacity = 10, Style = 0);
+}
+.r {
+	width: 100%;
+	position: fixed;
+	z-index: 100;
+	height: 40px;
+}
+.r2 {
+	z-index: 40;
+	width: 10px;
+	height: 16px;
+}
+#element_id {
+	width: 250;
+	word-break: break-all;
+	vertical-align: middle;
+	padding-left: 0px;
+}
+.main2 {
+	margin-left: 0%;
+	border-bottom-left-radius:25px;
+	border-bottom-right-radius:25px;
+	width: 100%;
+	height: 220px;
+	position: fixed;
+	bottom: 0px;
+	z-index: 999;	
+	background-color: rgba(0, 0, 0, 0.5);
+}
+#times {
+	margin-left:1100px;
+	width: 225px;
+	height: 55px;
+	line-height:55px;   
+	position: fixed;
+	top: 42px;
+	z-index: 999;
+	text-align: center;
+	color: #fff;
+	border-radius:10px;
+	font-family: 'sans-serif';
+	font-size: 35px;	
+	 box-shadow: 2px 2px 2px yellow;
+	 text-shadow:yellow 3px 3px 3px;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+#rightArrow {
+	width: 100%;
+	cursor: pointer;
+	border-top-left-radius:25px;
+	border-top-right-radius:25px;
+	height: 20px;
+	background-color: rgba(0, 0, 0, 0.6);
+	position: fixed;
+	bottom: 240px;
+	left: 0%;
+	z-index: 90;
+	text-align: center;
+}
+#rightArrow a {
+	display: block;
+	height: 220px;
+}
+</style>
+
+<script src="../../js/jquery-1.8.2.min.js"></script>
+<script src="../../js/jquery.cxselect.js"></script>
+
+<script src="../../extension/js/echarts.js"></script>
+<link href="../../extension/BMap/center.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=q9U1lWgCK1aBGVC1DVWrgWa7"></script>
+<script src="../../extension/js/1-2.js"></script>
+<script src="../../extension/js/bigeventnum.js"></script>
+<script src="../../extension//theme/macarons.js"></script>
+<link href="../../extension/BMap/images/music.png" rel="shortcut icon">
+</head>
+<body >    
+     <div id="container">
+		   <div class="menu" id="menu">		       
+			  <form id="form1" action="" method="post" >
+					<table class="mytable"> 
+						<tr> 
+							<td class="r1"><div style="width:60px;">进  站</div></td>
+							<td class="r2" style="width:70%;">
+							   <div  id="element_id" >								   
+							   <select class="province" data-value="02" data-first-title="2号线"></select>
+	  							<select class="city" id="city" name="city" data-value="0234" data-first-title="徐泾东"></select>
+							  </div>
+							</td>	
+							<td rowspan=2>
+								<a id="query" class="btn" href="javascript:queryPage();"><strong>查询</strong></a>
+							</td>			 	   
+						</tr>													
+		   				<tr>
+		   				 <td class="r1"><div style="width:60px;">日  期</div></td>
+							<td  class="r2" style="width:60%;">	
+																	
+							 <input id="date" name="date" class="laydate-icon" style="width:37%;" value="20150425"></input>		
+						  </td>							
+					  </tr>
+					</table>					   
+			</form>
+	 </div>    			 
+             <div class="main" id="main"></div>
+             <div id="rightArrow" style="bottom: 220px; background-position: 0px 0px;"><h2>进站客流量</h2></div>
+             <div id="main2" class="main2"></div>
+             <div id="times" class="times"></div>
+  </div>   
+</body>
+<script type="text/javascript">
+var flag=1;
+$("#rightArrow").click(function(){
+	if(flag==1){
+		$("#main2").animate({bottom: '-220px'},700);		
+		$(this).animate({bottom: '-5px'},700);
+		$(this).css('background-position','-50px 0');
+		flag=0;
+	}else{
+		$("#main2").animate({bottom: '0'},700);
+	
+		$(this).animate({bottom: '220px'},700);
+		$(this).css('background-position','0px 0');
+		flag=1;
+	}
+});
+</script>
+<script type="text/javascript"> 
+	var terminal;
+    function queryPage(){ 
+    clearTimeout(terminal);
+    var times=document.getElementById('times');
+   var name=new Array();
+   var num=new Array();
+ 
+	  myChart.showLoading({
+			text : '数据获取中',
+			effect : 'dynamicLine'
+		});
+	
+		 $.ajax({
+			//提交数据的类型 POST GET
+			type : "POST",
+			//提交的网址
+			url : "../../BigEventServlet",
+			//提交的数据            
+			data : {
+				id : $("#city").val(),				
+				date : $("#date").val()			
+			},
+			//返回数据的格式
+			datatype : "json",//"xml", "html", "script", "json", "jsonp", "text".
+			//在请求之前调用的函数
+			// beforeSend:
+			//成功返回之后调用的函数             
+			success : function(data) {
+
+				clearTimeout(terminal);
+
+				myChart.hideLoading();
+				var jsonData = eval(data[0]);
+				var jsonDataBar=eval(data[1]);
+
+				var i = 0;
+
+				function drawPoints() {
+
+					option.series[0].markPoint.data = jsonData[i][1];
+					times.innerHTML = '时间   '+jsonData[i][0].substr(0,2)+':'+jsonData[i][0].substr(2,2);
+					var bar = jsonDataBar[i][1];
+					name = new Array();
+					num = new Array();
+					for ( var j = 0; j <30; j++) {
+						name.push(bar[j].name);
+						num.push(bar[j].value);
+					}
+					option2.xAxis[0].data = name;
+					option2.series[0].data = num;
+					i++;
+					myChart2.clear();
+					myChart2.hideLoading();
+
+					myChart2.setOption(option2);
+					myChart2.setTheme(theme);
+
+					myChart.clear();
+
+					BMapExt.setOption(option);
+					terminal = setTimeout(drawPoints, 2500);
+					if (i > jsonData.length) {
+						myChart.clear();
+						myChart2.clear();
+						clearTimeout(terminal);
+
+					}
+				}
+				drawPoints();
+
+			},
+			//调用执行后调用的函数
+			complete : function(XMLHttpRequest, textStatus) {
+
+			},
+			//调用出错执行的函数
+			error : function() {
+				//请求出错处理
+			}
+		});
+	}
+</script>
+ <link href="../../laydate-master/skins/yalan/laydate.css"  rel="stylesheet" type="text/css"  /> 
+  <script type="text/javascript" src="../../laydate-master/laydate.dev.js"></script>
+    <script type="text/javascript"> 
+ $.cxSelect.defaults.url = '../../json/cityData.min.json'; 
+ $.cxSelect.defaults.nodata = 'none';  
+  // selects 为数组形式，请注意顺序 
+$('#element_id').cxSelect({ 
+required:true,
+  url: '../../json/cityData.min.json',   // 提示：如果服务器不支持 .json 类型文件，请将文件改为 .js 文件 
+  selects: ['province', 'city'], 
+  nodata: 'none' 
+}); 
+  </script>
+<script>
+laydate({
+    elem: '#date', //目标元素。由于laydate.js封装了一个轻量级的选择器引擎，因此elem还允许你传入class、tag但必须按照这种方式 '#id .class'
+    format: 'YYYYMMDD',
+    festival: true, //显示节日
+   // event: 'focus' //响应事件。如果没有传入event，则按照默认的click
+});
+</script>
+
+</html>

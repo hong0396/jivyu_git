@@ -3,10 +3,10 @@ import sys
 
 # Path for spark source folder
 #
-os.environ['SPARK_HOME']="C:\\Users\\Gui\\Downloads\\spark-2.0.0-bin-hadoop2.6"
+os.environ['SPARK_HOME']="E:\\Downloads\\spark-2.0.0-bin-hadoop2.6"
 os.environ['JAVA_HOME']="C:\\Program Files\\Java\\jdk1.8.0_121"
-os.environ['HADOOP_HOME']="C:\\Users\\Gui\\Downloads\\hadoop-common-2.2.0-bin-master\\bin"
-sys.path.append("C:\\Users\\Gui\\Downloads\\spark-2.0.0-bin-hadoop2.6\\python")
+os.environ['HADOOP_HOME']="E:\\Downloads\\hadoop-common-2.2.0-bin-master\\bin"
+sys.path.append("E:\\Downloads\\spark-2.0.0-bin-hadoop2.6\\python")
 try:
     from pyspark import SparkContext
     from pyspark import SparkConf

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+    <title>客流量展示</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+      <link rel="stylesheet" href="../../extension/BMap/style.css" />
+    <script src="../../js/jquery-1.8.2.min.js"></script>
+     <script src="../../js/jquery.cxselect.js"></script>
+     
+	
+     
+     
+   
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+    <script src="../../extension/js/echarts.js"></script>
+   <!--<script type="text/javascript" src="../../js/mapstyle.js"></script>--> 
+    <style type="text/css">
+	body { font-family:Verdana; font-size:14px; margin:0;}
+		#container {margin:0 auto; width:100%;overflow: hidden;z-index:0}	
+	#map{
+	/*margin-left:1360px;*/
+	width:100%;
+	position: fixed;
+	z-index:10
+	}
+	
+		html{height:100%}	
+ .menu1 { 
+ width:570px;
+ position:fixed; 
+ margin-top: 25px;
+ margin-left: 520px;
+ z-index:50;
+ background-color:rgba(0,0,0,0.3);
+
+  height: 56px;
+  padding-left: 11px;
+  padding-top: 17px;
+ }  
+  .btn {
+  width: 56px;
+  border-color: rgba(0, 0, 0, 0.25);
+ /* display: inline-block;*/
+position:fixed; 
+  margin-top: -24px;
+  margin-left: 27px;
+  font-size: 14px;
+  /*letter-spacing: 2px;*/
+  line-height: 45px;
+  color: #FFF;
+  text-align: center;  
+  vertical-align: middle;
+  cursor: pointer;
+  background-color: #00a900;
+}
+body {
+    font-family:verdana,helvetica,arial,sans-serif;   
+    font-size:12px; 
+}
+h2 {
+    font-size:18px;
+    font-weight:bold;
+    margin:0;
+    margin-bottom:15px;
+}
+
+#pie{
+color:#fff;
+ top: 0px;
+ margin-left:1px;
+z-index: 40;
+position: fixed;
+}
+#pie2{
+color:#fff;
+ top: 340px;
+ margin-left:1px;
+z-index: 40;
+position: fixed;
+}
+#times {
+		margin-left:1100px;
+	width: 225px;
+	height: 55px;
+	line-height:55px;   
+	position: fixed;
+	top: 42px;
+	z-index: 999;
+	text-align: center;
+	color: #fff;
+	border-radius:10px;
+	font-family: 'sans-serif';
+	font-size: 35px;	
+	 box-shadow: 2px 2px 2px yellow;
+	 text-shadow:yellow 3px 3px 3px;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+/*#rightArrow{width:50px;height:45px;background:url(../../extension/BMap/images/online_arrow.jpg) no-repeat;position:fixed;top:180px;left:550px;z-index:999;}*/
+#rightArrow{width:30px;height:240px;color:#fff;background-color:rgba(254,133,85,0.6);position:fixed;top:180px;left:400px;z-index:90;text-align:center;}
+#rightArrow a{display:block;height:230px;}
+</style>
+</head>
+<body>
+<div class="menu1" id="menu1">
+   <form id="form1" action="" method="post">
+					<table  class="mytable">
+					<tr> 
+					<td class="r1"><div style="width:30px;color:white;">日  期</div></td>
+					<td  class="r2">								
+						<input id="date" name="date" class="laydate-icon" style="width:37%;" value="20150402"></input>
+							<td  class="r1" ><div style="width:30px;color:white;">站  点</div></td>
+								<td class="r2">
+							   <div  id="element_id" >						    						  
+	  							<select class="province" data-value="01" data-first-title="1号线"></select>
+	  							<select class="city" id="city" name="city" data-value="0123" data-first-title="人民广场"></select>	 			
+							  </div>
+						       </td>	
+						    	<td>
+								<a id="query" class="btn" href="javascript:queryPage();"><strong>查询</strong></a>
+							</td>													
+					  </tr> 				
+					</table>					 
+			</form>	
+  </div>
+
+  <div id="map"></div>
+  <div id="times" class="times"></div>
+  <!--<div id="rightArrow" style="right: 170px; background-position: 0px 0px;"><a href="javascript:;" title="客流换乘"></a></div>-->
+ <div id="rightArrow" style="right: 170px; background-position: 0px 0px;"><h2>轨道交通客流换乘比例</h2></div>
+  <div id="pie"class="pie" style="width:400px;height:340px;"></div>
+ <div id="pie2"class="pie2" style="width:400px;height:340px;"></div>
+
+ <script src="../../js/Mapv.js"></script> 
+
+ <script src="../../js/example.js"></script>
+<!--<script src="../../extension/js/svg.js"></script>  --> 
+
+ <script src="../../extension/js/heatmappie.js"></script>
+   <script src="../../extension/theme/macarons.js"></script>
+<script type="text/javascript">
+/**
+ * @file 示例代码
+ */
+ var jsonData;
+var  MyData=new Array();
+bmap.centerAndZoom(new BMap.Point(121.479990,31.242918), 16); // 初始化地图,设置中心点坐标和地图级别
+//trunToDay(bmap);
+ bmap.setMapStyle({style:'dark'});
+// 第一步创建mapv示例
+var mapv = new Mapv({
+    drawTypeControl: true,
+    map: bmap  // 百度地图的map实例
+});
+
+
+
+function drawHeatMap(key){
+layer = new Mapv.Layer({
+    mapv: mapv, // 对应的mapv实例
+    zIndex: 1, // 图层层级
+    dataType: 'rectangle', // 数据类型，点类型
+    data: MyData, // 数据
+    drawType: 'heatmap', // 展示形式
+    drawOptions: { // 绘制参数
+        blur: true, // 是否有模糊效果
+        unit: 'm', // 单位,px:像素(默认),m:米
+        max: 100, // 设置显示的权重最大值
+        type: 'circle', // 点形状,可选circle:圆形(默认),rect:矩形
+        size: 45, // 半径大小
+        maxOpacity: 0.9,       
+        gradient: { // 显示的颜色渐变范围
+            '0': 'blue',
+           
+            '0.4': 'cyan',
+            '0.6': 'lime',
+            '0.8': 'yellow',
+            '1.0': 'red'
+        }
+    }
+});
+ var times=document.getElementById('times');
+MyData=new Array();
+   if(jsonData!=null&&jsonData!=""){                  
+                      
+            MyData=jsonData[key][1];
+            times.innerHTML = '时间   ' + jsonData[key][0].substr(0,2)+':'+jsonData[key][0].substr(2,2);
+                                                 	
+         
+    }       
+}
+</script>
+</body>
+<script type="text/javascript">     
+        var readyState=0;
+        var status=0; 
+        
+        var jsonData2;
+        var jsonData3;
+      
+          
+  var da=new Array();
+  var dada =new Array();
+  var od=new Array();
+  var titles=new Array();
+  var titles2=new Array();
+      function queryPage(){         
+     clearTimeout(heat);
+   //  clearInterval(iCount);
+  
+     
+     myChart.showLoading({
+					text : 'loading...',
+					effect: 'dynamic'
+				});
+	 myChart2.showLoading({
+					text : 'loading...',
+					effect: 'dynamic'
+				});
+  $.ajax({
+            //提交数据的类型 POST GET
+            type:"POST",
+         	 //async: false, //同步执行
+            //contentType:"application/json;charset=utf-8",
+            //提交的网址
+            url:"../../HeatmapServlet",
+            //提交的数据
+             data:{sitecode:$("#city").val(),date:$("#date").val()},
+            //返回数据的格式
+            datatype: "json",//"xml", "html", "script", "json", "jsonp", "text".
+            //在请求之前调用的函数
+           beforeSend: function(XMLHttpRequest){
+                     //ShowLoading();
+              },           
+            //成功返回之后调用的函数             
+            success:function(result){   
+            var result1=eval(result);             
+              
+           jsonData=eval(result1[0]); //热力图
+           jsonData2=eval(result1[1]);//进站
+           jsonData3=eval(result1[2]);//出站 
+       
+          
+            titles=[];       
+            if(jsonData2!=null&&jsonData2!=""){           
+       	     titles.push(jsonData2[0].name);
+       	     titles.push(jsonData2[1].name);
+       	      titles.push(jsonData2[2].name);
+       	       titles.push(jsonData2[3].name);
+       	      titles.push(jsonData2[4].name);
+            }
+             
+       	     
+       	     titles2=[];
+       	     if(jsonData3!=null&&jsonData3!=""){
+       	     titles2.push(jsonData3[0].name);
+       	     titles2.push(jsonData3[1].name);
+       	     titles2.push(jsonData3[2].name);
+       	     titles2.push(jsonData3[3].name);
+       	        titles2.push(jsonData2[4].name);	     
+       	     }
+       	    
+            },
+            //调用执行后调用的函数
+            complete: function(XMLHttpRequest, textStatus){ 
+             readyState=XMLHttpRequest.readyState;
+             status=XMLHttpRequest.status;  
+             
+             if(readyState==4&&status==200){
+       	     //TEST();
+       	     beginMap();
+       	   }            
+            },
+            //调用出错执行的函数
+            error: function(){
+                //请求出错处理
+                alert("不好意思，大爷，热力图请求数据失败啦!");
+            }         
+         });
+  } ;
+  
+
+  /*
+  获取后台的返回数据，根据时间轴动态画出热力图  
+  */  
+    var heat;
+  	function beginMap(){
+  	var hour=1;
+  	var keys=0;
+            function getMap(){ 
+            
+            	 
+                 bmap.clearOverlays();
+                 drawPie(hour);//绘制换成比例的饼图
+            	 drawHeatMap(keys);//绘制热力图
+            	 
+            	// bmap.addOverlay(polygon);            	
+            	// polygon.setFillOpacity(0.2);             	
+            	keys++;   
+            	hour++;              
+            	 heat= setTimeout(function () { getMap(); },3000 );
+            	  if(keys>jsonData.length){
+                  clearTimeout(heat);
+                }            	 
+            };   
+            getMap();    
+  	}; 	 
+  
+  	/*  	
+  	获取ajax成功返回的数据，根据定时器动态画出进出站换乘比例的饼图  	
+  	*/  	
+  	function drawPie(hour){  
+  //	if(hour<=24)	{
+  	 da = []; 
+  	  if(jsonData2!=null&&jsonData2!=""){
+  	  for(var i=0;i<jsonData2.length;i++){
+        //  if(jsonData2[i].timeid==hour+83){       	    
+       	     da.push(jsonData2[i]);
+       	 //  }          	  
+       	} 
+       		option.series[0].data=da;
+             option.legend.data =titles;
+       		myChart.clear();
+	       myChart.hideLoading();				
+		   myChart.setOption(option);
+		  // myChart.setTheme(theme);
+       	
+  	  }  	  
+       	      dada = [];    	
+       	      if(jsonData3!=null&&jsonData3!=""){
+       	       for(var k=0;k<jsonData3.length;k++){            
+       	  // if(jsonData3[k].timeid==hour+83){       	   
+       	     dada.push(jsonData3[k]); 
+       	 //  }        	      	          		  
+         }         
+         option2.series[0].data=dada;
+           option2.legend.data =titles2;  
+		   myChart2.clear();
+		   myChart2.hideLoading();
+		   myChart2.setOption(option2);
+         //  myChart2.setTheme(theme);          
+       	      }   
+  	
+  //	}
+  	   
+  	}; 
+</script>
+<script type="text/javascript">
+var flag=1;
+$("#rightArrow").click(function(){
+	if(flag==1){
+		$("#pie").animate({left: '-400px'},800);
+		$("#pie2").animate({left: '-400px'},800);
+		$(this).animate({left: '-5px'},800);
+		$(this).css('background-position','-50px 0');
+		flag=0;
+	}else{
+		$("#pie").animate({left: '0'},800);
+		$("#pie2").animate({left: '0'},800);
+		$(this).animate({left: '400px'},800);
+		$(this).css('background-position','0px 0');
+		flag=1;
+	}
+});
+</script>
+<link href="../../laydate-master/skins/yalan/laydate.css"  rel="stylesheet" type="text/css"/> 
+  <script type="text/javascript" src="../../laydate-master/laydate.dev.js"></script>
+ <script type="text/javascript">
+ $.cxSelect.defaults.url = '../../json/cityData.min.json'; 
+ $.cxSelect.defaults.nodata = 'none';  
+  // selects 为数组形式，请注意顺序 
+$('#element_id').cxSelect({ 
+required:true,
+  url: '../../json/cityData.min.json',   // 提示：如果服务器不支持 .json 类型文件，请将文件改为 .js 文件 
+  selects: ['province', 'city'], 
+  nodata: 'none' 
+}); 
+</script> 
+<script type="text/javascript">
+laydate({
+    elem: '#date', //目标元素。由于laydate.js封装了一个轻量级的选择器引擎，因此elem还允许你传入class、tag但必须按照这种方式 '#id .class'
+    format: 'YYYYMMDD',
+    event: 'focus' //响应事件。如果没有传入event，则按照默认的click
+});
+</script> 
+</html>
