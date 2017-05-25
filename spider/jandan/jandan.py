@@ -49,11 +49,12 @@ def janmei(url):
                     f.close()
                 print('---------写入完成gif--------------')
             elif img:
-                print('---------正在写入jpg--------------')
-                with open("E:\\picture\\"+name, 'ab') as file:
-                    file.write(requests.get('http:' + img, headers=headers).content)
-                    file.close()
-                print('---------写入完成jpg--------------')
+                if img[:4] != 'http':
+                    print('---------正在写入jpg--------------')
+                    with open("E:\\picture\\"+name, 'ab') as file:
+                        file.write(requests.get('http:' + img, headers=headers).content)
+                        file.close()
+                    print('---------写入完成jpg--------------')
             else:
                 pass
 
@@ -61,7 +62,8 @@ def janmei(url):
 
 
 
-        # html = requests.get('http:'+img, stream=True)
+
+                # html = requests.get('http:'+img, stream=True)
         # name=img.split(r'/')[-1]
         # print('http:'+img)
         #if str(name).split('.')[-1] == 'gif':
@@ -125,8 +127,8 @@ def page():
 #
 if __name__ == '__main__':
     page=int(page())
-    pool = Pool()
-    pool.map(janmei,[ janurl.format(i)  for i in range(1,page+1)])
-    # for i in range(1,page+1):
-    #     urls = janurl.format(i)
-    #     janmei(urls)
+    # pool = Pool()
+    # pool.map(janmei,[ janurl.format(i)  for i in range(1,page+1)])
+    for i in range(1,page+1):
+        urls = janurl.format(i)
+        janmei(urls)

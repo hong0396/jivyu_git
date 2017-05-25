@@ -198,6 +198,8 @@ public class HbaseConnection {
         String rootDir="hdfs://nameservice2/hbase";
         String zkServer="172.16.8.17";
         String port="2181";
+
+
         connect conn=new connect("172.16.8.17");
 
 

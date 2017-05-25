@@ -14,9 +14,11 @@ public class hbase {
         String port="2181";
         connect conn=new connect("172.16.8.17");
 
+
+
         try {
             oracle base = new oracle();
-            String sql = "select * from tbl_edw_card_temp";
+            String sql = "select t.card_id || '-' || od as card_od, t.sj, t.xf_je, t.yh_je, t.cx_cs  from TBL_EDW_CARD_TEMP t";
             base.conn();
             Statement st = (Statement) base.conn.createStatement();
             ResultSet s = st.executeQuery(sql);
@@ -24,23 +26,22 @@ public class hbase {
 
             while (s.next()) {
                 System.out.println("正在导入第"+i+"行数据");
-                String cardid = s.getString(1).toString();
+                String card_od = s.getString(1).toString();
                 String sj = s.getString(2).toString();
-                String od = s.getString(3).toString();
-                String xf_je = s.getString(4).toString();
-                String yh_je = s.getString(5).toString();
-                String cx_cs = s.getString(6).toString();
-                Put put = new Put(Bytes.toBytes(cardid));
-                put.addColumn(Bytes.toBytes("sj"), Bytes.toBytes(od),
+                String xf_je = s.getString(3).toString();
+                String yh_je = s.getString(4).toString();
+                String cx_cs = s.getString(5).toString();
+                Put put = new Put(Bytes.toBytes(card_od));
+                put.addColumn(Bytes.toBytes("result"), Bytes.toBytes("sj"),
                         Bytes.toBytes(sj));
-                put.addColumn(Bytes.toBytes("xf_je"), Bytes.toBytes(od),
+                put.addColumn(Bytes.toBytes("result"), Bytes.toBytes("xf_je"),
                         Bytes.toBytes(xf_je));
-                put.addColumn(Bytes.toBytes("yh_je"), Bytes.toBytes(od),
+                put.addColumn(Bytes.toBytes("result"), Bytes.toBytes("yh_je"),
                         Bytes.toBytes(yh_je));
-                put.addColumn(Bytes.toBytes("cx_cs"), Bytes.toBytes(od),
+                put.addColumn(Bytes.toBytes("result"), Bytes.toBytes("cx_cs"),
                         Bytes.toBytes(cx_cs));
 
-                conn.PutData("tbl_edw_card", put);
+                conn.PutData("tbl_edw_card_ba", put);
                 i++;
 
             }
@@ -49,6 +50,88 @@ public class hbase {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//        try {
+//            oracle base = new oracle();
+//            String sql = "select * from tbl_edw_card_temp";
+//            base.conn();
+//            Statement st = (Statement) base.conn.createStatement();
+//            ResultSet s = st.executeQuery(sql);
+//            int i = 1;
+//
+//            while (s.next()) {
+//                System.out.println("正在导入第"+i+"行数据");
+//                String cardid = s.getString(1).toString();
+//                String sj = s.getString(2).toString();
+//                String od = s.getString(3).toString();
+//                String xf_je = s.getString(4).toString();
+//                String yh_je = s.getString(5).toString();
+//                String cx_cs = s.getString(6).toString();
+//                Put put = new Put(Bytes.toBytes(cardid));
+//                put.addColumn(Bytes.toBytes("sj"), Bytes.toBytes(od),
+//                        Bytes.toBytes(sj));
+//                put.addColumn(Bytes.toBytes("xf_je"), Bytes.toBytes(od),
+//                        Bytes.toBytes(xf_je));
+//                put.addColumn(Bytes.toBytes("yh_je"), Bytes.toBytes(od),
+//                        Bytes.toBytes(yh_je));
+//                put.addColumn(Bytes.toBytes("cx_cs"), Bytes.toBytes(od),
+//                        Bytes.toBytes(cx_cs));
+//
+//                conn.PutData("tbl_edw_card", put);
+//                i++;
+//
+//            }
+//            base.close();
+//        }catch (SQLException e){
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

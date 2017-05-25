@@ -1,0 +1,13 @@
+netstat -anp | grep 8765
+
+
+CREATE EXTERNAL TABLE tbl_edw_card(card_od  string, cx_cs string, sj string, xf_je string, yh_je string)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.hbase.HBaseSerDe'
+STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+WITH SERDEPROPERTIES ("hbase.columns.mapping" = ":key, result:cx_cs, result:sj, result:xf_je, result:yh_je")
+TBLPROPERTIES("hbase.table.name" = "tbl_edw_card_ba");
+
+
+
+INVALIDATE METADATA;
+
