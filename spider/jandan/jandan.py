@@ -129,6 +129,6 @@ if __name__ == '__main__':
     page=int(page())
     # pool = Pool()
     # pool.map(janmei,[ janurl.format(i)  for i in range(1,page+1)])
-    for i in range(1,page+1):
+    for i in range(50,page+1):
         urls = janurl.format(i)
         janmei(urls)
