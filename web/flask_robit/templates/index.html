@@ -34,6 +34,9 @@
 
                 htmlobj=$.ajax({type: 'POST', url:"/test2", data:{value:value}, async:false});
                 $("ul").append(htmlobj.responseText);
+
+
+
 {#                $.post("/test", function(data){#}
 {#                    $(data).appendTo("ul");#}
 {#                });#}
@@ -91,7 +94,7 @@
 {#<div class="credits"><a href="http://codepen.io/clintioo/pen/HAkjq">Original Pen</a> by <a href="http://codepen.io/clintioo/pen/HAkjq">clintioo</a></div>#}
 <div class="msg_end" id="msg_end"></div>
 <div id="sent_div">
-{#    <form action="/login" method="post">#}
+{#    <form action="/test2" method="post">#}
         <input type="text"  style="height:28px; font-size:15px;" placeholder="请输入文字" class="sent_input" id="sentinput" name="message"/>
         <input type="submit" class="sent_btn" id="b01" value="提交">
 {#    </form>#}

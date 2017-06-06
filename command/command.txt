@@ -1,6 +1,7 @@
 netstat -anp | grep 8765
 
 
+
 CREATE EXTERNAL TABLE tbl_edw_card(card_od  string, cx_cs string, sj string, xf_je string, yh_je string)
 ROW FORMAT SERDE 'org.apache.hadoop.hive.hbase.HBaseSerDe'
 STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
@@ -9,5 +10,28 @@ TBLPROPERTIES("hbase.table.name" = "tbl_edw_card_ba");
 
 
 
-INVALIDATE METADATA;
 
+create table tbl_edw_card_temp as
+select distinct  a.tjrlcardno as card_id,
+round((to_date(lpad(a.tjrlrtime, 6, '0'),'hh24miss')-to_date(lpad(a.tjrltime_pre, 6, '0'),'hh24miss')) * 24 * 60, 2)  as  sj,
+  substr(lpad(a.tjrltime_pre, 6,'0'),  0,  2) || '_' || '1'|| '_' ||lpad(a.tjrlstatid_pre, 4,'0') || '_' ||  lpad(a.tjrlstatid, 4, '0')   as od ,  a.tjrlamt as xf_je  , a.tjrldisamt as yh_je,
+  count(*) over(partition by a.tjrlcardno,  substr(lpad(a.tjrltime_pre, 6,'0'),  0,  2), a.tjrlstatid_pre, a.tjrlstatid) as cx_cs
+      from TBL_EDW_SOA_FTJ a  where a.tjrlinsid = '21'
+and a.tjrlstatid <> 0 and tjrlstatid_pre <> 0 and a.tjrlstatid_pre < 10000 and a.tjrlinsid < 10000;
+
+
+
+create table tbl_edw_card_avg_temp as
+select t.card_id || '-' || t.od  as card_od, round(avg(t.sj), 2) as sj,  round(avg(t.xf_je), 0) as xf_je, round(avg(t.yh_je), 0 ) as yh_je,
+ round(avg(t.cx_cs),0) as cx_cs from TBL_EDW_CARD_TEMP t
+  group by  t.card_id,  t.od
+
+
+
+sqoop import --hive-import --connect jdbc:oracle:thin:@172.16.8.16:1521:ORAAPP1  
+--username otcs --password dwotcs   -m 1  --table TBL_EDW_CARD_AVG_TEMP
+--hive-table TBL_EDW_CARD_TEMP --hive-drop-import-delims
+
+
+
+insert into table tbl_edw_card select t.card_od, t.cx_cs,t.sj,t.xf_je,t.yh_je from tbl_edw_card_temp t;
