@@ -1,13 +1,57 @@
 netstat -anp | grep 8765
 
+将系统日期设定成2009年11月3日的命令
+
+命令 ： "date -s 11/03/2009"
+
+将系统时间设定成下午5点55分55秒的命令
+
+命令 ： "date -s 17:55:55"
+
+3. 将当前时间和日期写入BIOS，避免重启后失效
+命令 ： "hwclock -w"
+
+clock  --show
+
+删除表中的所有数据
+
+# 语法： truncate <table>
+# 其具体过程是：disable table -> drop table -> create table
+# 例如：删除表t1的所有数据
+hbase(main)> truncate 't1'
 
 
-CREATE EXTERNAL TABLE tbl_edw_card(card_od  string, cx_cs string, sj string, xf_je string, yh_je string)
+
+CREATE EXTERNAL TABLE tbl_edw_card(CARD_OD  string, CX_CS string, SJ string, XF_JE string, YH_JE string)
 ROW FORMAT SERDE 'org.apache.hadoop.hive.hbase.HBaseSerDe'
 STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
-WITH SERDEPROPERTIES ("hbase.columns.mapping" = ":key, result:cx_cs, result:sj, result:xf_je, result:yh_je")
-TBLPROPERTIES("hbase.table.name" = "tbl_edw_card_ba");
+WITH SERDEPROPERTIES ("hbase.columns.mapping" = ":key, result:CX_CS, result:SJ, result:XF_JE, result:YH_JE")
+TBLPROPERTIES("hbase.table.name" = "tbl_edw_card");
 
+
+
+CREATE TABLE tbl_card_table_kudu
+PRIMARY KEY (card_od)
+PARTITION BY HASH PARTITIONS 16
+STORED AS KUDU
+TBLPROPERTIES(
+'kudu.master_addresses' = 'c1,c2'
+)
+AS SELECT  * FROM tbl_edw_card_temp;
+
+
+
+CREATE TABLE my_first_table
+(
+  id BIGINT,
+  name STRING,
+  PRIMARY KEY(id)
+)
+PARTITION BY HASH PARTITIONS 16
+STORED AS KUDU
+TBLPROPERTIES(
+'kudu.master_addresses' = 'c1,c2'
+);
 
 
 
@@ -35,3 +79,58 @@ sqoop import --hive-import --connect jdbc:oracle:thin:@172.16.8.16:1521:ORAAPP1
 
 
 insert into table tbl_edw_card select t.card_od, t.cx_cs,t.sj,t.xf_je,t.yh_je from tbl_edw_card_temp t;
+
+
+
+
+
+
+
+sqoop import  --connect jdbc:oracle:thin:@172.16.8.16:1521:ORAAPP1 
+ --username otcs --password dwotcs   -m 1  --table TBL_EDW_CARD_AVG_TEMP 
+ --hbase-table tbl_edw_card_ba -hbase-row-key CARD_OD --column-family RESULT --hbase-bulkload
+
+
+
+
+
+
+sqoop import  --connect jdbc:oracle:thin:@172.16.8.16:1521:ORAAPP1  
+--username otcs --password dwotcs    --table TBL_EDW_CARD_AVG_TEMP 
+ --hbase-table tbl_edw_card_ba -hbase-row-key CARD_OD --column-family RESULT  --split-by CARD_OD -m 7 --hbase-bulkload
+
+
+
+
+
+
+sqoop import  --connect jdbc:oracle:thin:@172.16.8.16:1521:ORAAPP1
+ --username otcs --password dwotcs   -m 1  --query  SELECT  *   FROM  TBL_EDW_CARD_AVG_TEMP WHERE SJ NOT LIKE '-%'
+ --hbase-table tbl_edw_card_ba -hbase-row-key card_od --column-family result  --hbase-bulkload
+
+
+
+
+
+
+sqoop import  --connect jdbc:oracle:thin:@172.16.8.16:1521:ORAAPP1  
+--username otcs --password dwotcs    --table TBL_EDW_CARD_AVG_TEMP  
+--hbase-table tbl_edw_card_ba -hbase-row-key CARD_OD --column-family result 
+ --split-by CARD_OD -m 5 -columns sj,xf_je,yh_je,cx_cs
+
+
+
+
+
+
+
+ sqoop import --connect jdbc:oracle:thin:@172.16.8.16:1521:ORAAPP1 --username otcs --password dwotcs --table TBL_EDW_CARD_AVG_TEMP --hbase-table tbl_edw_card_ba -hbase-row-key CARD_OD --column-family result --split-by  rownum  -m 5
+
+
+
+
+
+
+ sqoop import --connect jdbc:oracle:thin:@172.16.8.16:1521:ORAAPP1 --username otcs --password dwotcs --table TBL_EDW_CARD_AVG_TEMP --hbase-table tbl_edw_card  -hbase-row-key CARD_OD --column-family result --split-by  rownum  -m 5
+
+

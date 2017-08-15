@@ -17,14 +17,14 @@ headers = {  'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.3
 }
 #writeGif(filename, images, duration=0.5, subRectangles=False)
 requests.adapters.DEFAULT_RETRIES = 5
-# s = requests.session()
-# s.keep_alive = False
+s = requests.session()
+s.keep_alive = False
 def janmei(url):
     #res=requests.get(url, headers=headers)
     page = ''
     while page == '':
         try:
-            page = requests.get(url, headers=headers)
+            page = s.get(url, headers=headers)
         except:
             print("Connection refused by the server..")
             print("Let me sleep for 5 seconds")
@@ -33,26 +33,31 @@ def janmei(url):
             print("Was a nice sleep, now let me continue...")
             continue
     soup = BeautifulSoup(page.content, 'lxml')
+
     lis=soup.find_all('img')
     for i in lis:
         img=str(i['src'])
         gif = i.get('org_src')
         # print(img)
         # print(gif)
-        time.sleep(3)
+        #time.sleep(3)
         name = img.split(r'/')[-1]
         if not os.path.exists("E:\\picture\\"+name) :
             if gif:
                 print('---------正在写入gif--------------')
                 with open("E:\\picture\\"+name, 'wb') as f:
-                    f.write(requests.get('http:' + gif, headers=headers).content)
+                    time.sleep(2)
+                    textg=s.get('http:' + gif, headers=headers)
+                    f.write(textg.content)
                     f.close()
                 print('---------写入完成gif--------------')
             elif img:
                 if img[:4] != 'http':
                     print('---------正在写入jpg--------------')
                     with open("E:\\picture\\"+name, 'ab') as file:
-                        file.write(requests.get('http:' + img, headers=headers).content)
+                        time.sleep(2)
+                        textj=s.get('http:' + img, headers=headers)
+                        file.write(textj.content)
                         file.close()
                     print('---------写入完成jpg--------------')
             else:
@@ -100,7 +105,7 @@ def janmei(url):
 
 
 def page():
-    res=requests.get('http://jandan.net/ooxx',headers=headers)
+    res=s.get('http://jandan.net/ooxx',headers=headers)
     soup = BeautifulSoup(res.content, 'lxml')
     lis=soup.find('span','current-comment-page').string.replace('[','').replace(']','')
     return lis
@@ -129,6 +134,6 @@ if __name__ == '__main__':
     page=int(page())
     # pool = Pool()
     # pool.map(janmei,[ janurl.format(i)  for i in range(1,page+1)])
-    for i in range(50,page+1):
+    for i in range(100,page+1):
         urls = janurl.format(i)
         janmei(urls)
