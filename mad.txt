@@ -1,0 +1,12 @@
+
+git add -A
+
+git add .
+
+git commit -m  "one-night"
+
+git remote rm origin
+
+git remote add origin https://github.com/hong0396/jivyu_git.git
+
+git push -u origin master
